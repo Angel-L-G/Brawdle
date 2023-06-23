@@ -2,7 +2,7 @@ package es.joja.Brawle.dao;
 
 import java.util.ArrayList;
 
-public class UserDAO implements ICrud{
+public class GameDAO implements ICrud{
     @Override
     public Object save(Object dao) {
         return null;
