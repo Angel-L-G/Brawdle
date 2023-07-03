@@ -8,12 +8,12 @@ public class Leyend implements Serializable {
     String race;
     String gender;
     int year;
-    Weapon[] weapons;
+    String[] weapons;
 
     public Leyend() {
     }
 
-    public Leyend(int id, String name, String race, String gender, int year, Weapon[] weapons) {
+    public Leyend(int id, String name, String race, String gender, int year, String[] weapons) {
         this.id = id;
         this.name = name;
         this.race = race;
@@ -62,11 +62,11 @@ public class Leyend implements Serializable {
         this.year = year;
     }
 
-    public Weapon[] getWeapons() {
+    public String[] getWeapons() {
         return weapons;
     }
 
-    public void setWeapons(Weapon[] weapons) {
+    public void setWeapons(String[] weapons) {
         this.weapons = weapons;
     }
 }
