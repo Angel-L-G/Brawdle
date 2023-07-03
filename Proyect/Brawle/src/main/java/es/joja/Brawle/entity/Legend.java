@@ -2,7 +2,7 @@ package es.joja.Brawle.entity;
 
 import java.io.Serializable;
 
-public class Leyend implements Serializable {
+public class Legend implements Serializable {
     int id;
     String name;
     String race;
@@ -10,10 +10,10 @@ public class Leyend implements Serializable {
     int year;
     String[] weapons;
 
-    public Leyend() {
+    public Legend() {
     }
 
-    public Leyend(int id, String name, String race, String gender, int year, String[] weapons) {
+    public Legend(int id, String name, String race, String gender, int year, String[] weapons) {
         this.id = id;
         this.name = name;
         this.race = race;

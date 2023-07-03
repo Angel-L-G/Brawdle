@@ -2,7 +2,7 @@ package es.joja.Brawle.dao;
 
 import java.util.ArrayList;
 
-public class LeyendDAO implements ICrud{
+public class LegendDAO implements ICrud{
     @Override
     public Object save(Object dao) {
         return null;

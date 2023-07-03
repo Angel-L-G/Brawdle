@@ -1,8 +1,8 @@
 package es.joja.Brawle.contract;
 
-public class LeyendContract {
-    private LeyendContract() {}
-    public static final String TABLE_NAME = "leyends";
+public class LegendContract {
+    private LegendContract() {}
+    public static final String TABLE_NAME = "legends";
     public static final String ID = "id";
     public static final String NAME = "name";
     public static final String RACE = "race";
