@@ -519,4 +519,6 @@ INSERT INTO ROLES(NAME) VALUES("User");
 
 --Users
 
+INSERT INTO USERS(ID, EMAIL, NICK, PASSWORD, ROLE_NAME) VALUES(null, "admin123@gmail.com", "Admin", "1q2w3e4r", "Admin");
+
 --Games_Users
