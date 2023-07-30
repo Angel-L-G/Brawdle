@@ -1,11 +1,12 @@
 package es.joja.Brawle.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Legend implements Serializable {
     int id;
     String name;
-    String race;
+    ArrayList<String> race;
     String gender;
     int year;
     String[] weapons;
@@ -13,7 +14,7 @@ public class Legend implements Serializable {
     public Legend() {
     }
 
-    public Legend(int id, String name, String race, String gender, int year, String[] weapons) {
+    public Legend(int id, String name, ArrayList<String> race, String gender, int year, String[] weapons) {
         this.id = id;
         this.name = name;
         this.race = race;
@@ -38,11 +39,11 @@ public class Legend implements Serializable {
         this.name = name;
     }
 
-    public String getRace() {
+    public ArrayList<String> getRace() {
         return race;
     }
 
-    public void setRace(String race) {
+    public void setRace(ArrayList<String> race) {
         this.race = race;
     }
 
