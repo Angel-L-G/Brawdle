@@ -4,12 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Legend implements Serializable {
-    int id;
-    String name;
-    ArrayList<String> race;
-    String gender;
-    int year;
-    String[] weapons;
+    private Integer id;
+    private String name;
+    private ArrayList<String> race;
+    private String gender;
+    private Integer year;
+    private String[] weapons;
 
     public Legend() {
     }
@@ -23,7 +23,7 @@ public class Legend implements Serializable {
         this.weapons = weapons;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -55,7 +55,7 @@ public class Legend implements Serializable {
         this.gender = gender;
     }
 
-    public int getYear() {
+    public Integer getYear() {
         return year;
     }
 

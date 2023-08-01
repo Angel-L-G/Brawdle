@@ -3,9 +3,9 @@ package es.joja.Brawle.entity;
 import java.io.Serializable;
 
 public class GameDetails implements Serializable {
-    Game game;
-    int numTries;
-    boolean guessed;
+    private Game game;
+    private Integer numTries;
+    private boolean guessed;
 
     public GameDetails() {
     }
@@ -24,7 +24,7 @@ public class GameDetails implements Serializable {
         this.game = game;
     }
 
-    public int getNumTries() {
+    public Integer getNumTries() {
         return numTries;
     }
 
