@@ -30,7 +30,7 @@ public class UserDAO implements ICrud<User,Integer>{
         		+ UserContract.NICK + ","
         		+ UserContract.EMAIL + ","
         		+ UserContract.PASSWORD + ","
-        		+ UserContract.ROLE + ","
+        		+ UserContract.ROLE_NAME + ","
         		+ ") "
         		+ "VALUES(?,?,?,?);";
     	
@@ -86,7 +86,7 @@ public class UserDAO implements ICrud<User,Integer>{
 				String nick = rs.getString(UserContract.NICK);
 				String email = rs.getString(UserContract.EMAIL);
 				String hashpw = rs.getString(UserContract.PASSWORD);
-				String role = rs.getString(UserContract.ROLE);
+				String role = rs.getString(UserContract.ROLE_NAME);
 				
 				user = new User(id,nick,email,hashpw,role);
 				}
@@ -107,7 +107,7 @@ public class UserDAO implements ICrud<User,Integer>{
 		UserContract.NICK + "=" + dao.getNick() + "," +
 		UserContract.EMAIL + "=" + dao.getEmail() + "," +
 		UserContract.PASSWORD + "=" + dao.getPassword() + "," +
-		UserContract.ROLE + "=" + dao.getRole() + ";"; 
+		UserContract.ROLE_NAME + "=" + dao.getRole() + ";"; 
 		
 		try(
 				Connection cn = gc.getConnection();
@@ -159,7 +159,7 @@ public class UserDAO implements ICrud<User,Integer>{
 				String nick = rs.getString(UserContract.NICK);
 				String email = rs.getString(UserContract.EMAIL);
 				String hashpw = rs.getString(UserContract.PASSWORD);
-				String role = rs.getString(UserContract.ROLE);
+				String role = rs.getString(UserContract.ROLE_NAME);
 				users.add(new User(id,nick,email,hashpw,role));
 			}
 		} catch (SQLException e) {
