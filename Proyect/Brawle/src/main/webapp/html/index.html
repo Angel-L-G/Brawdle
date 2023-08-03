@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brawle</title>
+
+
+    <script>
+        function colocarTextAreas(){
+            let texto = document.getElementById('texto').value;
+            let cajas="<br>";
+            const array = texto.split('');
+
+            for(let i = 1 ; i <= array.length ; i++){
+                cajas+="<input type='text' size=1>"
+            }
+
+
+            let resultado = document.getElementById("resultado");
+            resultado.innerHTML = cajas
+
+        }
+
+    </script>
+</head>
+<body onload="colocarTextAreas()">
+    <h1>Brawle</h1>
+    <div>
+        <form>
+            <p>Introduce el nombre del jugador</p><br>
+            <input type="text" id="texto">
+            <button type="button" onclick=colocarTextAreas()>Crear</button>
+
+        </form>
+    </div>
+    <div id="resultado"><br></div>
+</body>
+</html>
