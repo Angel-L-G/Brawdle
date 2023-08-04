@@ -9,32 +9,49 @@
 
     <script>
         function colocarTextAreas(){
-            let texto = document.getElementById('texto').value;
-            let cajas="<br>";
-            const array = texto.split('');
+        const arrayJugadores = ['Jiro','Jhala','Lin fei','Lord Vraxx'];
+        let cajas='';    
+        let cantidadArray = arrayJugadores.length;
+            var jugadorEscogido = arrayJugadores.at (Math.random()*cantidadArray);
+            console.log(jugadorEscogido)
 
-            for(let i = 1 ; i <= array.length ; i++){
-                cajas+="<input type='text' size=1>"
+            for(let i = 0 ; i <= jugadorEscogido.length-1 ; i++){
+                if(jugadorEscogido.charAt(i)== ' '){
+                    
+                    cajas+="&nbsp"
+                }else{
+                    cajas+="<input type='text' size=1 name='caja'>"
+                }
+                
             }
-
+/*style='background-color: red'*/
 
             let resultado = document.getElementById("resultado");
-            resultado.innerHTML = cajas
+            resultado.innerHTML = cajas;
 
         }
+        function comprobarLetras(){
+            let letras = document.getElementById("resultado")
+            let arrayValores=[];
+            for (let i = 0; i < jugadorEscogido.length-1; i++) {
+                arrayValores.push(letras.nodeValue(i));
+                
+            }
+            console.log(arrayValores)
 
+        }
     </script>
 </head>
-<body onload="colocarTextAreas()">
+<body onload=colocarTextAreas()>
     <h1>Brawle</h1>
     <div>
+        <p>Adivina el nombre del jugador</p><br>
         <form>
-            <p>Introduce el nombre del jugador</p><br>
-            <input type="text" id="texto">
-            <button type="button" onclick=colocarTextAreas()>Crear</button>
+            <div id="resultado"><br></div>
+            <button type="button" onclick=comprobarLetras()>Try</button>
 
         </form>
     </div>
-    <div id="resultado"><br></div>
+    
 </body>
 </html>
