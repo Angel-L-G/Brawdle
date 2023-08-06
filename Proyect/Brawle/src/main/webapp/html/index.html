@@ -17,7 +17,7 @@
 =======
     <!--Own Styles-->
     <link rel="stylesheet" href="../css/style.css">
-    <title>Brawle</title>
+    <title>Brawdle</title>
 
 >>>>>>> feat: Created cards for login and register. Im ccurrently working on pop ups to show log in an register forms #11
     <!--Javascript-->
@@ -56,60 +56,6 @@
         </div>
         </div>
     </div>
-<<<<<<< HEAD
-    <div class="form-div fade-in" style="display: none" id="loginForm">
-        <div class="left"><div class="image"><img src="../img/Koji.png" width="250px" style="margin-left: 10%;"></div></div>
-        <div class="right">
-            <div class="right-form">
-                <p><strong>Log in</strong></p>
-                <form id="login" name="login">
-                    <input type="text" id="name" class="form-control" style="width: 200px; margin-left: 20%;" placeholder="Name">
-                    <br>
-                    <input type="password" id="password" class="form-control" style="width: 200px; margin-left: 20%;"  placeholder="Password">
-                    <br>
-                    <button type="button" class="btn btn-primary" onclick="closeLogin()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="form-div fade-in" style="display: none" id="registerForm">
-        <div class="left"><div class="image"><img src="../img/Caspian.png" width="250px" style="margin-left: 10%;"></div></div>
-        <div class="right">
-            <div class="right-form">
-                <p><strong>Registrarse</strong></p>
-                <form id="register" name="register">
-                    <input type="text" id="name" class="form-control" style="width: 200px; margin-left: 20%;" placeholder="Name">
-                    <br>
-                    <input type="password" id="password" class="form-control" style="width: 200px; margin-left: 20%;"  placeholder="Password">
-                    <br>
-                    <button type="button" class="btn btn-primary" onclick="closeRegister()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-            </div>
-        </div>
-    </div>
-=======
-
-    <script>
-        function colocarTextAreas(){
-        const arrayJugadores = ['Jiro','Jhala','Lin fei','Lord Vraxx'];
-        let cajas='';    
-        let cantidadArray = arrayJugadores.length;
-            var jugadorEscogido = arrayJugadores.at (Math.random()*cantidadArray);
-            console.log(jugadorEscogido)
-
-            for(let i = 0 ; i <= jugadorEscogido.length-1 ; i++){
-                if(jugadorEscogido.charAt(i)== ' '){
-                    
-                    cajas+="&nbsp"
-                }else{
-                    cajas+="<input type='text' size=1 name='caja'>"
-                }
-                
-            }
-/*style='background-color: red'*/
-=======
 
     <div class="login-register-form-popup" id="loginForm">
         <form action="/action_page.php" class="form-container">
@@ -123,21 +69,6 @@
 
             <button type="submit" class="btn">Login</button>
             <button type="button" class="btn cancel" onclick="closeLogin()">Close</button>
-        </form>
-    </div>
-
-    <div class="login-register-form-popup" id="registerForm">
-        <form action="/action_page.php" class="form-container">
-            <h1>Login</h1>
-    
-            <label for="email"><b>Email</b></label>
-            <input type="text" placeholder="Enter Email" name="email" required>
-            
-            <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" required>
-
-            <button type="submit" class="btn">register</button>
-            <button type="button" class="btn cancel" onclick="closeRegister()">Close</button>
         </form>
     </div>
 
