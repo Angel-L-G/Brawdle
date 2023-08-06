@@ -24,7 +24,13 @@ body{
     text-align: center;
 }
 
-/*Form LogIn*/
+/*Form cards*/
+
+.form-cards{
+    margin-top: 10%;
+    text-align: center;
+
+}
 
 .login-register-form-popup {
     color: #f1f1f1;
@@ -34,4 +40,19 @@ body{
     right: 15px;
     border: 3px solid #f1f1f1;
     z-index: 9;
+    
+}
+
+.fade-in{
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from{
+        opacity: 0;
+    }
+to{
+    opacity: 1;
+}
+    
 }
