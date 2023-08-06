@@ -25,83 +25,24 @@ body{
     border-radius: 70px;
 }
 
-.card:hover{
-    background-color: whitesmoke;
-    animation: slidein;
-    animation-duration: 0.5s;
-    animation-fill-mode: forwards;    
-}
-
-.card:not(hover){
-    background-color: white;
-
-    animation: slideout 0.5s;    
-
-}
-@keyframes slidein {
-    from {
-        
-        transform: translateY(0%);
-    }
-
-    to {
-        transform: translateY(-10%);
-
-        
-    }
-}
-
-@keyframes slideout {
-    from {
-        
-        transform: translateY(-10%);
-    }
-
-    to {
-        transform: translateY(0%);
-
-        
-    }
-}
 /*Form cards*/
 
-.form-div{
-    display: grid;
-    display: flex;
+.form-cards{
+    margin-top: 10%;
     text-align: center;
-    margin: auto;
-    margin-top: 5%;
-    height: 20rem;
-    width: 35rem;
-    background-color: white;
-    border-radius: 23px;
-}
-.left{
-    float:left;
-    width: 40%;
-    height: 100%;
-    border-radius: 23px;
-
-}
-.right{
-    float: right;
-    width: 60%;
-    height: 100%;
-
-    border-radius: 23px;
-
 
 }
 
-.right-form{
-    height: 80%;
-    margin-top: 10%;
-
+.login-register-form-popup {
+    color: #f1f1f1;
+    display: none;
+    position: fixed;
+    margin-bottom: 10%;
+    right: 15px;
+    border: 3px solid #f1f1f1;
+    z-index: 9;
+    
 }
-.image{
-    margin-top: 10%;
-}
-
 
 .fade-in{
     animation: fadeIn 0.5s;
@@ -116,4 +57,3 @@ to{
 }
     
 }
-
