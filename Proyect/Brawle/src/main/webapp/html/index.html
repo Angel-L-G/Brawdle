@@ -4,54 +4,16 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brawle</title>
-
-
-    <script>
-        function colocarTextAreas(){
-        const arrayJugadores = ['Jiro','Jhala','Lin fei','Lord Vraxx'];
-        let cajas='';    
-        let cantidadArray = arrayJugadores.length;
-            var jugadorEscogido = arrayJugadores.at (Math.random()*cantidadArray);
-            console.log(jugadorEscogido)
-
-            for(let i = 0 ; i <= jugadorEscogido.length-1 ; i++){
-                if(jugadorEscogido.charAt(i)== ' '){
-                    
-                    cajas+="&nbsp"
-                }else{
-                    cajas+="<input type='text' size=1 name='caja'>"
-                }
-                
-            }
-/*style='background-color: red'*/
-
-            let resultado = document.getElementById("resultado");
-            resultado.innerHTML = cajas;
-
-        }
-        function comprobarLetras(){
-            let letras = document.getElementById("resultado")
-            let arrayValores=[];
-            for (let i = 0; i < jugadorEscogido.length-1; i++) {
-                arrayValores.push(letras.nodeValue(i));
-                
-            }
-            console.log(arrayValores)
-
-        }
-    </script>
-</head>
-<body onload=colocarTextAreas()>
-    <h1>Brawle</h1>
-    <div>
-        <p>Adivina el nombre del jugador</p><br>
-        <form>
-            <div id="resultado"><br></div>
-            <button type="button" onclick=comprobarLetras()>Try</button>
-
-        </form>
-    </div>
     
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    <title>Brawle</title>
+</head>
+<body>
+    <div><img src="../img/logo.png" alt="logo provisional" class="logo"></div>
+    <div></div>
+
 </body>
+
 </html>
