@@ -1,3 +1,12 @@
+/*Background*/
+body{
+    background-image: url("../img/background.webp");
+    background-repeat: no-repeat;
+    background-size: cover;
+
+}
+
+/*header*/
 .logo{
     
     display: block;
@@ -6,9 +15,23 @@
 
 }
 
-body{
-    background-image: url("../img/background.webp");
-    background-repeat: no-repeat;
-    background-size: cover;
+/*cards*/
 
+.cards{
+    margin-top: 10%;
+    margin-left: 30%;
+    margin-right: 30%;
+    text-align: center;
+}
+
+/*Form LogIn*/
+
+.login-register-form-popup {
+    color: #f1f1f1;
+    display: none;
+    position: fixed;
+    margin-bottom: 10%;
+    right: 15px;
+    border: 3px solid #f1f1f1;
+    z-index: 9;
 }
