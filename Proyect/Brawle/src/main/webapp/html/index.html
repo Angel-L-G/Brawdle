@@ -41,43 +41,35 @@
         </div>
         </div>
     </div>
-
     <div class="form-div fade-in" style="display: none" id="loginForm">
-        <div class="left">a</div>
+        <div class="left"><div class="image"><img src="../img/Koji.png" width="250px" style="margin-left: 10%;"></div></div>
         <div class="right">
-            <button type="button" onclick="closeLogin()">Cancel</button>
-                <button type="submit" >Cancel</button>
+            <div class="right-form">
+                <p><strong>Log in</strong></p>
+                <form id="login" name="login">
+                    <input type="text" id="name" class="form-control" style="width: 200px; margin-left: 20%;" placeholder="Name">
+                    <br>
+                    <input type="password" id="password" class="form-control" style="width: 200px; margin-left: 20%;"  placeholder="Password">
+                    <br>
+                    <button type="button" class="btn btn-primary" onclick="closeLogin()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
         </div>
     </div>
     <div class="form-div fade-in" style="display: none" id="registerForm">
-        <div class="left">a</div>
+        <div class="left"><div class="image"><img src="../img/Caspian.png" width="250px" style="margin-left: 10%;"></div></div>
         <div class="right">
             <div class="right-form">
-                <p>Registrarse</p>
+                <p><strong>Registrarse</strong></p>
                 <form id="register" name="register">
-                    <table border="1">
-                        <tr>
-                        <td>
-                            <label for="name">Nombre</label>
-                        </td>
-                        <td><input type="text" placeholder="Name" id="name"></td>
-                        </tr>
-                        <tr> 
-                        <td>
-                            <label for="password">Password</label>
-                        </td>
-                        <td><input type="password" placeholder="Password" id="password"></td>
-                        </tr>
-                        
-                        
-                        
-                    </table>
+                    <input type="text" id="name" class="form-control" style="width: 200px; margin-left: 20%;" placeholder="Name">
                     <br>
-                    <button type="button" onclick="closeRegister()">Cancel</button>
-                    <button type="submit" >Cancel</button>
-                
+                    <input type="password" id="password" class="form-control" style="width: 200px; margin-left: 20%;"  placeholder="Password">
+                    <br>
+                    <button type="button" class="btn btn-primary" onclick="closeRegister()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
-            
             </div>
         </div>
     </div>
