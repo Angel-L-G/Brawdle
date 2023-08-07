@@ -25,6 +25,45 @@ body{
     text-align: center;
 }
 
+.card:hover{
+    background-color: lightblue;
+    border: 2px violet;
+    animation: slidein;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;    
+}
+
+.card:not(hover){
+    background-color: lightblue;
+    border: 2px violet;
+    animation: slideout 0.5s;    
+
+}
+@keyframes slidein {
+    from {
+        
+        transform: translateY(0%);
+    }
+
+    to {
+        transform: translateY(-10%);
+
+        
+    }
+}
+
+@keyframes slideout {
+    from {
+        
+        transform: translateY(-10%);
+    }
+
+    to {
+        transform: translateY(0%);
+
+        
+    }
+}
 /*Form cards*/
 
 .form-div{
@@ -76,3 +115,4 @@ to{
 }
     
 }
+
