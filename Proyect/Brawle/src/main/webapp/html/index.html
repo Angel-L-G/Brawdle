@@ -57,6 +57,7 @@
         </div>
     </div>
 
+<<<<<<< HEAD
     <div class="login-register-form-popup" id="loginForm">
         <form action="/action_page.php" class="form-container">
             <h1>Login</h1>
@@ -76,6 +77,48 @@
 
             let resultado = document.getElementById("resultado");
             resultado.innerHTML = cajas;
+=======
+    <div class="form-div fade-in" style="display: none" id="loginForm">
+        <div class="left">a</div>
+        <div class="right">
+            <button type="button" onclick="closeLogin()">Cancel</button>
+                <button type="submit" >Cancel</button>
+        </div>
+    </div>
+    <div class="form-div fade-in" style="display: none" id="registerForm">
+        <div class="left">a</div>
+        <div class="right">
+            <div class="right-form">
+                <p>Registrarse</p>
+                <form id="register" name="register">
+                    <table border="1">
+                        <tr>
+                        <td>
+                            <label for="name">Nombre</label>
+                        </td>
+                        <td><input type="text" placeholder="Name" id="name"></td>
+                        </tr>
+                        <tr> 
+                        <td>
+                            <label for="password">Password</label>
+                        </td>
+                        <td><input type="password" placeholder="Password" id="password"></td>
+                        </tr>
+                        
+                        
+                        
+                    </table>
+                    <br>
+                    <button type="button" onclick="closeRegister()">Cancel</button>
+                    <button type="submit" >Cancel</button>
+                
+                </form>
+            
+            </div>
+        </div>
+    </div>
+</body>
+>>>>>>> feat:Made changes in the form cards to look better. #11
 
         }
         function comprobarLetras(){

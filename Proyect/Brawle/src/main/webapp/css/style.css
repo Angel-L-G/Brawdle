@@ -1,3 +1,4 @@
+
 /*Background*/
 body{
     background-image: url("../img/background.webp");
@@ -72,7 +73,11 @@ body{
     text-align: center;
     margin: auto;
     margin-top: 5%;
+<<<<<<< HEAD
     height: 20rem;
+=======
+    height: 35rem;
+>>>>>>> feat:Made changes in the form cards to look better. #11
     width: 35rem;
     background-color: white;
     border-radius: 23px;
@@ -82,6 +87,18 @@ body{
     width: 40%;
     height: 100%;
     border-radius: 23px;
+<<<<<<< HEAD
+
+}
+.right{
+    float: right;
+    width: 60%;
+    height: 100%;
+
+    border-radius: 23px;
+
+=======
+>>>>>>> feat:Made changes in the form cards to look better. #11
 
 }
 .right{
@@ -92,8 +109,7 @@ body{
     border-radius: 23px;
 
 
-}
-
+<<<<<<< HEAD
 .right-form{
     height: 80%;
     margin-top: 10%;
@@ -116,7 +132,17 @@ to{
     opacity: 1;
 }
     
+=======
+>>>>>>> feat:Made changes in the form cards to look better. #11
 }
+
+.right-form{
+    height: 80%;
+    margin-top: 10%;
+
+}
+
+
 
 .fade-in{
     animation: fadeIn 0.5s;
