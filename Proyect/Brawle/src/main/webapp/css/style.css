@@ -13,6 +13,7 @@ body{
     display: block;
     width: 40%;
     margin: auto;
+    margin-top: 5%;
 
 }
 
@@ -23,19 +24,19 @@ body{
     margin-left: 30%;
     margin-right: 30%;
     text-align: center;
+    border-radius: 70px;
 }
 
 .card:hover{
-    background-color: lightblue;
-    border: 2px violet;
+    background-color: whitesmoke;
     animation: slidein;
     animation-duration: 0.5s;
     animation-fill-mode: forwards;    
 }
 
 .card:not(hover){
-    background-color: lightblue;
-    border: 2px violet;
+    background-color: white;
+
     animation: slideout 0.5s;    
 
 }
@@ -72,7 +73,7 @@ body{
     text-align: center;
     margin: auto;
     margin-top: 5%;
-    height: 35rem;
+    height: 20rem;
     width: 35rem;
     background-color: white;
     border-radius: 23px;
@@ -99,7 +100,9 @@ body{
     margin-top: 10%;
 
 }
-
+.image{
+    margin-top: 10%;
+}
 
 
 .fade-in{
