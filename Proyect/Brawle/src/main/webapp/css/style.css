@@ -56,16 +56,15 @@ body{
 <<<<<<< HEAD
 =======
 .card:hover{
-    background-color: lightblue;
-    border: 2px violet;
+    background-color: whitesmoke;
     animation: slidein;
     animation-duration: 0.5s;
     animation-fill-mode: forwards;    
 }
 
 .card:not(hover){
-    background-color: lightblue;
-    border: 2px violet;
+    background-color: white;
+
     animation: slideout 0.5s;    
 
 }
@@ -104,10 +103,14 @@ body{
     margin: auto;
     margin-top: 5%;
 <<<<<<< HEAD
+<<<<<<< HEAD
     height: 20rem;
 =======
     height: 35rem;
 >>>>>>> feat:Made changes in the form cards to look better. #11
+=======
+    height: 20rem;
+>>>>>>> feat: finished page of login and register #11
     width: 35rem;
     background-color: white;
     border-radius: 23px;
@@ -171,7 +174,9 @@ to{
     margin-top: 10%;
 
 }
-
+.image{
+    margin-top: 10%;
+}
 
 
 .fade-in{
