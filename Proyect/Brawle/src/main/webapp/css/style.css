@@ -1,3 +1,4 @@
+
 /*Background*/
 body{
     background-image: url("../img/background.webp");
@@ -26,22 +27,41 @@ body{
 
 /*Form cards*/
 
-.form-cards{
-    margin-top: 10%;
+.form-div{
+    display: grid;
+    display: flex;
     text-align: center;
+    margin: auto;
+    margin-top: 5%;
+    height: 35rem;
+    width: 35rem;
+    background-color: white;
+    border-radius: 23px;
+}
+.left{
+    float:left;
+    width: 40%;
+    height: 100%;
+    border-radius: 23px;
+
+}
+.right{
+    float: right;
+    width: 60%;
+    height: 100%;
+
+    border-radius: 23px;
+
 
 }
 
-.login-register-form-popup {
-    color: #f1f1f1;
-    display: none;
-    position: fixed;
-    margin-bottom: 10%;
-    right: 15px;
-    border: 3px solid #f1f1f1;
-    z-index: 9;
-    
+.right-form{
+    height: 80%;
+    margin-top: 10%;
+
 }
+
+
 
 .fade-in{
     animation: fadeIn 0.5s;

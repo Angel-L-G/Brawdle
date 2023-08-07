@@ -41,39 +41,45 @@
         </div>
     </div>
 
-    <div class="card mb-3 form-cards mx-auto fade-in" style="max-width: 540px; display: none;" id="loginForm">
-        <div class="row g-0">
-        <div class="col-md-4">
-            <img src="..." class="img-fluid rounded-start" alt="login image">
-        </div>
-        <div class="col-md-8">
-            <div class="card-body">
-                <h5 class="card-title">Log in</h5>
-                <p class="card-text">introduce los respectivos datos.</p>
-                <button type="button" onclick="closeLogin()">Cancel</button>
-                <button type="submit" onclick="closeLogin()">Cancel</button>
-            </div>
-        </div>
-        </div>
-    </div>
-
-    <div class="card mb-3 form-cards mx-auto fade-in" style="max-width: 540px; display: none;" id="registerForm">
-        <div class="row g-0">
-        <div class="col-md-4">
-            <img src="..." class="img-fluid rounded-start" alt="login image">
-        </div>
-        <div class="col-md-8">
-            <div class="card-body">
-                <h5 class="card-title">Register in</h5>
-                <p class="card-text">introduce los respectivos datos.</p>
-                <button type="button" onclick="closeRegister()">Cancel</button>
+    <div class="form-div fade-in" style="display: none" id="loginForm">
+        <div class="left">a</div>
+        <div class="right">
+            <button type="button" onclick="closeLogin()">Cancel</button>
                 <button type="submit" >Cancel</button>
-            </div>
-        </div>
         </div>
     </div>
-
-
+    <div class="form-div fade-in" style="display: none" id="registerForm">
+        <div class="left">a</div>
+        <div class="right">
+            <div class="right-form">
+                <p>Registrarse</p>
+                <form id="register" name="register">
+                    <table border="1">
+                        <tr>
+                        <td>
+                            <label for="name">Nombre</label>
+                        </td>
+                        <td><input type="text" placeholder="Name" id="name"></td>
+                        </tr>
+                        <tr> 
+                        <td>
+                            <label for="password">Password</label>
+                        </td>
+                        <td><input type="password" placeholder="Password" id="password"></td>
+                        </tr>
+                        
+                        
+                        
+                    </table>
+                    <br>
+                    <button type="button" onclick="closeRegister()">Cancel</button>
+                    <button type="submit" >Cancel</button>
+                
+                </form>
+            
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
