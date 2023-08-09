@@ -24,7 +24,9 @@ public class UserDAO implements ICrud<User,Integer>{
 	}
 	
 	
-	//Falta revisar el como insertar los roles desde aqui 
+	//Angel: Falta revisar el como insertar los roles desde aqui 
+	//Owen: do you really want to insert,delete,update roles from the application? 
+	//or just from mysql?
 	
 	@Override
 	public User save(User dao) {
@@ -37,28 +39,28 @@ public class UserDAO implements ICrud<User,Integer>{
         		+ UserContract.PASSWORD + ","
         		+ UserContract.ROLE + ","
         		+ ") "
-        		+ "VALUES(?,?,?,?);";
+        		+ "VALUES(?,?,?,?,?);";
     	
         try(
         		Connection cn = jdbcTemplate.getDataSource().getConnection(); //PreparedStatement.RETURN_GENERATED_KEYS se usa para obtener el autoincremental al insertar en la DDBB
-        		PreparedStatement psInsert = cn.prepareStatement(insertsql, PreparedStatement.RETURN_GENERATED_KEYS);
+        		PreparedStatement ps = cn.prepareStatement(insertsql, PreparedStatement.RETURN_GENERATED_KEYS);
         		) {
         	if (dao.getId() == null) {
-        		psInsert.setNull(1, Types.NULL);
+        		ps.setNull(1, Types.NULL);
         	} else {
-        		psInsert.setInt(1, dao.getId());
+        		ps.setInt(1, dao.getId());
         	}
         	
-        	psInsert.setString(2, dao.getNick());
-        	psInsert.setString(3, dao.getEmail());
-        	psInsert.setString(4, dao.getPassword());
-        	psInsert.setString(5, dao.getRole());
+        	ps.setString(2, dao.getNick());
+        	ps.setString(3, dao.getEmail());
+        	ps.setString(4, dao.getPassword());
+        	ps.setString(5, dao.getRole());
         	
-        	int cantidad = psInsert.executeUpdate();
+        	int cantidad = ps.executeUpdate();
         	if( cantidad > 0) {
         		res = dao;
         		if(dao.getId() == null) {
-        			ResultSet rs = psInsert.getGeneratedKeys();
+        			ResultSet rs = ps.getGeneratedKeys();
         			if (rs != null && rs.next()) {
         				int idNew = rs.getInt(1);
         				res.setId(idNew);
@@ -94,7 +96,7 @@ public class UserDAO implements ICrud<User,Integer>{
 				String role = rs.getString(UserContract.ROLE);
 				
 				user = new User(id,nick,email,hashpw,role);
-				}
+			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -105,21 +107,25 @@ public class UserDAO implements ICrud<User,Integer>{
 	}
 
 	@Override
-	public boolean update(User dao) {
+	public boolean update(User dao) {//Owen: I left it as we could not change the ids
 		boolean res = false;
 		String Updatesql = "UPDATE " + UserContract.TABLE_NAME + " SET " +
-		UserContract.ID + "=" + dao.getId() + "," +
-		UserContract.NICK + "=" + dao.getNick() + "," +
-		UserContract.EMAIL + "=" + dao.getEmail() + "," +
-		UserContract.PASSWORD + "=" + dao.getPassword() + "," +
-		UserContract.ROLE + "=" + dao.getRole() + ";"; 
+		UserContract.NICK + "= ?," +
+		UserContract.EMAIL + "= ?," +
+		UserContract.PASSWORD + "= ?," +
+		UserContract.ROLE + "= ?" +
+		" WHERE " + UserContract.ID + " = ?;"; 
 		
 		try(
 				Connection cn = jdbcTemplate.getDataSource().getConnection();
-				PreparedStatement psUp = cn.prepareStatement(Updatesql);
+				PreparedStatement ps = cn.prepareStatement(Updatesql);
 		){
-			psUp.executeQuery();
-			res = true;
+			ps.setString(1, dao.getNick());
+			ps.setString(2, dao.getEmail());
+			ps.setString(3, dao.getPassword());
+			ps.setString(4, dao.getRole());
+			ps.setInt(5, dao.getId());
+			res = ps.executeUpdate() > 0;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -133,14 +139,13 @@ public class UserDAO implements ICrud<User,Integer>{
 	public boolean delete(Integer id) {
 		boolean res = false;
 		String Delsql = "DELETE FROM " + UserContract.TABLE_NAME
-				+ " WHERE " + UserContract.ID + "=" + 
-				id + ";";
+				+ " WHERE " + UserContract.ID + " = ?;";
 		try(
 				Connection cn = jdbcTemplate.getDataSource().getConnection();
-				PreparedStatement psDel = cn.prepareStatement(Delsql);
+				PreparedStatement ps = cn.prepareStatement(Delsql);
 			){
-			psDel.executeQuery();
-			res = true;
+			ps.setInt(1, id);
+			res = ps.executeUpdate() > 0;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
