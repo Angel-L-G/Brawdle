@@ -7,15 +7,20 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+
 import es.joja.Brawdle.contract.UserContract;
 import es.joja.Brawdle.entity.User;
 
+@Repository
 public class UserDAO implements ICrud<User,Integer>{
 	
-	DDBBConnManager gc;
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 	
-	public UserDAO(DDBBConnManager gc) {
-		this.gc = gc;
+	public UserDAO() {
 	}
 	
 	
@@ -35,7 +40,7 @@ public class UserDAO implements ICrud<User,Integer>{
         		+ "VALUES(?,?,?,?);";
     	
         try(
-        		Connection cn = gc.getConnection(); //PreparedStatement.RETURN_GENERATED_KEYS se usa para obtener el autoincremental al insertar en la DDBB
+        		Connection cn = jdbcTemplate.getDataSource().getConnection(); //PreparedStatement.RETURN_GENERATED_KEYS se usa para obtener el autoincremental al insertar en la DDBB
         		PreparedStatement psInsert = cn.prepareStatement(insertsql, PreparedStatement.RETURN_GENERATED_KEYS);
         		) {
         	if (dao.getId() == null) {
@@ -77,7 +82,7 @@ public class UserDAO implements ICrud<User,Integer>{
 		String findsql = "SELECT * FROM " + UserContract.TABLE_NAME
 				+ "WHERE " + UserContract.ID + " = ?";
 		try(
-				Connection cn = gc.getConnection(); PreparedStatement ps = cn.prepareStatement(findsql); 
+				Connection cn = jdbcTemplate.getDataSource().getConnection(); PreparedStatement ps = cn.prepareStatement(findsql); 
 		){
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
@@ -110,7 +115,7 @@ public class UserDAO implements ICrud<User,Integer>{
 		UserContract.ROLE + "=" + dao.getRole() + ";"; 
 		
 		try(
-				Connection cn = gc.getConnection();
+				Connection cn = jdbcTemplate.getDataSource().getConnection();
 				PreparedStatement psUp = cn.prepareStatement(Updatesql);
 		){
 			psUp.executeQuery();
@@ -131,7 +136,7 @@ public class UserDAO implements ICrud<User,Integer>{
 				+ " WHERE " + UserContract.ID + "=" + 
 				id + ";";
 		try(
-				Connection cn = gc.getConnection();
+				Connection cn = jdbcTemplate.getDataSource().getConnection();
 				PreparedStatement psDel = cn.prepareStatement(Delsql);
 			){
 			psDel.executeQuery();
@@ -149,7 +154,7 @@ public class UserDAO implements ICrud<User,Integer>{
 		String Allsql = "SELECT * FROM " + UserContract.TABLE_NAME;
 		
 		try(
-				Connection cn = gc.getConnection();
+				Connection cn = jdbcTemplate.getDataSource().getConnection();
 				PreparedStatement ps = cn.prepareStatement(Allsql);
 			){
 			ResultSet rs = ps.executeQuery();

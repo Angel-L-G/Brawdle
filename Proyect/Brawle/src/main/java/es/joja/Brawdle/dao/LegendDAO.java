@@ -2,7 +2,16 @@ package es.joja.Brawdle.dao;
 
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+
+@Repository
 public class LegendDAO implements ICrud{
+	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	
     @Override
     public Object save(Object dao) {
         return null;
