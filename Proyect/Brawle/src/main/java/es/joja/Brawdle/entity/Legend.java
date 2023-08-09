@@ -1,4 +1,4 @@
-package es.joja.Brawle.entity;
+package es.joja.Brawdle.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;

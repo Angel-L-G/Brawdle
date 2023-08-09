@@ -1,4 +1,4 @@
-package es.joja.Brawle.dao;
+package es.joja.Brawdle.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 
-import es.joja.Brawle.contract.UserContract;
-import es.joja.Brawle.entity.User;
+import es.joja.Brawdle.contract.UserContract;
+import es.joja.Brawdle.entity.User;
 
 public class UserDAO implements ICrud<User,Integer>{
 	
