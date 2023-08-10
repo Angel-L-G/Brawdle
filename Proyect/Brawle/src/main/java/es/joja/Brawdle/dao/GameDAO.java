@@ -34,7 +34,7 @@ public class GameDAO implements ICrud<Game ,Integer>{
     		Connection cn = jdbcTemplate.getDataSource().getConnection();
     		PreparedStatement ps = cn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)
     	){
-    		
+    		//I was doing it but I got caught on other things
     	} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
