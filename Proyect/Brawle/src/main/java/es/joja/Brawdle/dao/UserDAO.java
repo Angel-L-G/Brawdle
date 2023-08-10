@@ -25,8 +25,6 @@ public class UserDAO implements ICrud<User,Integer>{
 	
 	
 	//Angel: Falta revisar el como insertar los roles desde aqui 
-	//Owen: do you really want to insert,delete,update roles from the application? 
-	//or just from mysql?
 	
 	@Override
 	public User save(User dao) {
@@ -37,12 +35,11 @@ public class UserDAO implements ICrud<User,Integer>{
         		+ UserContract.NICK + ","
         		+ UserContract.EMAIL + ","
         		+ UserContract.PASSWORD + ","
-        		+ UserContract.ROLE + ","
-        		+ ") "
+        		+ UserContract.ROLE + ") "
         		+ "VALUES(?,?,?,?,?);";
     	
         try(
-        		Connection cn = jdbcTemplate.getDataSource().getConnection(); //PreparedStatement.RETURN_GENERATED_KEYS se usa para obtener el autoincremental al insertar en la DDBB
+        		Connection cn = jdbcTemplate.getDataSource().getConnection();
         		PreparedStatement ps = cn.prepareStatement(insertsql, PreparedStatement.RETURN_GENERATED_KEYS);
         		) {
         	if (dao.getId() == null) {

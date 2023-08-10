@@ -6,34 +6,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import es.joja.Brawdle.entity.Legend;
+
 @Repository
-public class LegendDAO implements ICrud{
+public class LegendDAO implements ICrud<Legend, Integer>{
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
     @Override
-    public Object save(Object dao) {
+    public Legend save(Legend dao) {
         return null;
     }
 
     @Override
-    public Object findById(Object id) {
+    public Legend findById(Integer id) {
         return null;
     }
 
     @Override
-    public boolean update(Object dao) {
+    public boolean update(Legend dao) {
         return false;
     }
 
     @Override
-    public boolean delete(Object id) {
+    public boolean delete(Integer id) {
         return false;
     }
 
     @Override
-    public ArrayList findAll() {
+    public ArrayList<Legend> findAll() {
         return null;
     }
 }
