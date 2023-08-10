@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import es.joja.Brawdle.contract.GamesUsersContract;
 import es.joja.Brawdle.contract.RolesContract;
 import es.joja.Brawdle.contract.UsersContract;
+import es.joja.Brawdle.entity.Game;
 import es.joja.Brawdle.entity.GameDetails;
 import es.joja.Brawdle.entity.User;
 
@@ -22,6 +23,9 @@ public class UserDAO implements ICrud<User,Integer>{
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	private GameDAO gameDAO;
 	
 	public UserDAO() {
 	}
@@ -58,9 +62,9 @@ public class UserDAO implements ICrud<User,Integer>{
         	
         	cn.setAutoCommit(false);
         	String role = findAllRoles(dao.getRole());
-        	if (role == null) {
+        	if (role == null) {//This checks if it exists
         		role = saveRole(dao.getRole());
-        		if (role == null) {
+        		if (role == null) {//This inserts it if it does not exist
         			ok = false;
         		}
         	}
@@ -78,9 +82,15 @@ public class UserDAO implements ICrud<User,Integer>{
 	        	
 	        	ok = psUser.executeUpdate() > 0;
 	        	if(ok) {
-	        		
-	        		for (int i = 0; i < dao.getGames().size() && ok; i++) {
-	        			GameDetails detail = dao.getGames().get(i);
+	        		ArrayList<Game> games = gameDAO.findAll();
+	        		ArrayList<GameDetails> details = new ArrayList();
+	        		for (Game game : games) {
+	        			GameDetails detail = new GameDetails(game, 0, false);
+						details.add(detail);
+					}
+	        		dao.setGames(details);
+	        		for (int i = 0; i < details.size() && ok; i++) {
+	        			GameDetails detail = details.get(i);
 	        			psDetail.setInt(1, detail.getGame().getId());
 	            		psDetail.setInt(2, dao.getId());
 	            		psDetail.setInt(3, detail.getNumTries());
