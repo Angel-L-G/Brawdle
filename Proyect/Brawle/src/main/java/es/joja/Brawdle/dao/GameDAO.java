@@ -9,11 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import es.joja.Brawdle.contract.GameContract;
+import es.joja.Brawdle.contract.GamesContract;
 import es.joja.Brawdle.entity.Game;
 
 @Repository
-public class GameDAO implements ICrud<Game ,Integer>{
+public class GameDAO implements ICrud<Game ,String>{
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -25,9 +25,9 @@ public class GameDAO implements ICrud<Game ,Integer>{
     public Game save(Game dao) {
     	Game game = null;
     	
-    	String sql = "INSERT INTO " + GameContract.TABLE_NAME + "("
-    			+ GameContract.ID + ","
-    			+ GameContract.LEGEND_ID + ") "
+    	String sql = "INSERT INTO " + GamesContract.TABLE_NAME + "("
+    			+ GamesContract.ID + ","
+    			+ GamesContract.LEGEND_ID + ") "
     			+ "VALUES (?,?);";
     	
     	try(
@@ -44,7 +44,7 @@ public class GameDAO implements ICrud<Game ,Integer>{
     }
 
     @Override
-    public Game findById(Integer id) {
+    public Game findById(String id) {
         return null;
     }
 
@@ -54,7 +54,7 @@ public class GameDAO implements ICrud<Game ,Integer>{
     }
 
     @Override
-    public boolean delete(Integer id) {
+    public boolean delete(String id) {
         return false;
     }
 

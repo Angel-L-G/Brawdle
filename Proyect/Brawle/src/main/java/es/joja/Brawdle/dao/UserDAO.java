@@ -11,7 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import es.joja.Brawdle.contract.UserContract;
+import es.joja.Brawdle.contract.GamesUsersContract;
+import es.joja.Brawdle.contract.RolesContract;
+import es.joja.Brawdle.contract.UsersContract;
+import es.joja.Brawdle.entity.GameDetails;
 import es.joja.Brawdle.entity.User;
 
 @Repository
@@ -23,63 +26,106 @@ public class UserDAO implements ICrud<User,Integer>{
 	public UserDAO() {
 	}
 	
-	
-	//Angel: Falta revisar el como insertar los roles desde aqui 
-	
 	@Override
 	public User save(User dao) {
-		User res = null;
+		User user = null;
+		
+		boolean ok = true;
     	
-        String insertsql = "INSERT INTO " + UserContract.TABLE_NAME + "("
-        		+ UserContract.ID + ","
-        		+ UserContract.NICK + ","
-        		+ UserContract.EMAIL + ","
-        		+ UserContract.PASSWORD + ","
-        		+ UserContract.ROLE + ") "
+        String usersql = "INSERT INTO " + UsersContract.TABLE_NAME + "("
+        		+ UsersContract.ID + ","
+        		+ UsersContract.NICK + ","
+        		+ UsersContract.EMAIL + ","
+        		+ UsersContract.PASSWORD + ","
+        		+ UsersContract.ROLE + ") "
         		+ "VALUES(?,?,?,?,?);";
+        
+        String detailsql = "INSERT INTO " + GamesUsersContract.TABLE_NAME + "("
+        		+ GamesUsersContract.GAME_ID + ","
+        		+ GamesUsersContract.USER_ID + ","
+        		+ GamesUsersContract.NUM_TRIES + ","
+        		+ GamesUsersContract.GUESSED + ","
+        		+ ") "
+        		+ "VALUES(?,?,?,?);";
+        
+        
     	
         try(
         		Connection cn = jdbcTemplate.getDataSource().getConnection();
-        		PreparedStatement ps = cn.prepareStatement(insertsql, PreparedStatement.RETURN_GENERATED_KEYS);
-        		) {
-        	if (dao.getId() == null) {
-        		ps.setNull(1, Types.NULL);
-        	} else {
-        		ps.setInt(1, dao.getId());
-        	}
+        		PreparedStatement psUser = cn.prepareStatement(usersql, PreparedStatement.RETURN_GENERATED_KEYS);
+        		PreparedStatement psDetail = cn.prepareStatement(detailsql);
+        ) {
         	
-        	ps.setString(2, dao.getNick());
-        	ps.setString(3, dao.getEmail());
-        	ps.setString(4, dao.getPassword());
-        	ps.setString(5, dao.getRole());
-        	
-        	int cantidad = ps.executeUpdate();
-        	if( cantidad > 0) {
-        		res = dao;
-        		if(dao.getId() == null) {
-        			ResultSet rs = ps.getGeneratedKeys();
-        			if (rs != null && rs.next()) {
-        				int idNew = rs.getInt(1);
-        				res.setId(idNew);
-        			}
+        	cn.setAutoCommit(false);
+        	String role = findAllRoles(dao.getRole());
+        	if (role == null) {
+        		role = saveRole(dao.getRole());
+        		if (role == null) {
+        			ok = false;
         		}
         	}
-        	
+        	if (ok) {
+	        	if (dao.getId() == null) {
+	        		psUser.setNull(1, Types.NULL);
+	        	} else {
+	        		psUser.setInt(1, dao.getId());
+	        	}
+	        	
+	        	psUser.setString(2, dao.getNick());
+	        	psUser.setString(3, dao.getEmail());
+	        	psUser.setString(4, dao.getPassword());
+	        	psUser.setString(5, dao.getRole());
+	        	
+	        	ok = psUser.executeUpdate() > 0;
+	        	if(ok) {
+	        		
+	        		for (int i = 0; i < dao.getGames().size() && ok; i++) {
+	        			GameDetails detail = dao.getGames().get(i);
+	        			psDetail.setInt(1, detail.getGame().getId());
+	            		psDetail.setInt(2, dao.getId());
+	            		psDetail.setInt(3, detail.getNumTries());
+	            		psDetail.setBoolean(4, detail.isGuessed());
+	            		
+	            		ok = psDetail.executeUpdate() > 0;
+					}
+	        		if (ok) {
+	        			cn.commit();
+	        			user = dao;
+	        			if(dao.getId() == null) {
+	            			ResultSet rs = psUser.getGeneratedKeys();
+	            			if (rs != null && rs.next()) {
+	            				int idNew = rs.getInt(1);
+	            				user.setId(idNew);
+	            			}
+	            		}
+	        		} else {
+	        			cn.rollback();
+	        			user = null;
+	        		}
+	        	} else {
+	        		cn.rollback();
+	        		user = null;
+	        	}
+        	} else {
+        		cn.rollback();
+        		user = null;
+        	}
+        	cn.setAutoCommit(true);
         } catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			res = null;
+			user = null;
 		}
         
-    	return res;
+    	return user;
 	}
 
 	@Override
 	public User findById(Integer id) {
 		User user = null;
 		
-		String findsql = "SELECT * FROM " + UserContract.TABLE_NAME
-				+ "WHERE " + UserContract.ID + " = ?";
+		String findsql = "SELECT * FROM " + UsersContract.TABLE_NAME
+				+ "WHERE " + UsersContract.ID + " = ?";
 		try(
 				Connection cn = jdbcTemplate.getDataSource().getConnection(); PreparedStatement ps = cn.prepareStatement(findsql); 
 		){
@@ -87,10 +133,10 @@ public class UserDAO implements ICrud<User,Integer>{
 			ResultSet rs = ps.executeQuery();
 			
 			if(rs.next()) {
-				String nick = rs.getString(UserContract.NICK);
-				String email = rs.getString(UserContract.EMAIL);
-				String hashpw = rs.getString(UserContract.PASSWORD);
-				String role = rs.getString(UserContract.ROLE);
+				String nick = rs.getString(UsersContract.NICK);
+				String email = rs.getString(UsersContract.EMAIL);
+				String hashpw = rs.getString(UsersContract.PASSWORD);
+				String role = rs.getString(UsersContract.ROLE);
 				
 				user = new User(id,nick,email,hashpw,role);
 			}
@@ -106,16 +152,16 @@ public class UserDAO implements ICrud<User,Integer>{
 	@Override
 	public boolean update(User dao) {//Owen: I left it as we could not change the ids
 		boolean res = false;
-		String Updatesql = "UPDATE " + UserContract.TABLE_NAME + " SET " +
-		UserContract.NICK + "= ?," +
-		UserContract.EMAIL + "= ?," +
-		UserContract.PASSWORD + "= ?," +
-		UserContract.ROLE + "= ?" +
-		" WHERE " + UserContract.ID + " = ?;"; 
+		String updatesql = "UPDATE " + UsersContract.TABLE_NAME + " SET " +
+		UsersContract.NICK + "= ?," +
+		UsersContract.EMAIL + "= ?," +
+		UsersContract.PASSWORD + "= ?," +
+		UsersContract.ROLE + "= ?" +
+		" WHERE " + UsersContract.ID + " = ?;"; 
 		
 		try(
 				Connection cn = jdbcTemplate.getDataSource().getConnection();
-				PreparedStatement ps = cn.prepareStatement(Updatesql);
+				PreparedStatement ps = cn.prepareStatement(updatesql);
 		){
 			ps.setString(1, dao.getNick());
 			ps.setString(2, dao.getEmail());
@@ -135,11 +181,11 @@ public class UserDAO implements ICrud<User,Integer>{
 	@Override
 	public boolean delete(Integer id) {
 		boolean res = false;
-		String Delsql = "DELETE FROM " + UserContract.TABLE_NAME
-				+ " WHERE " + UserContract.ID + " = ?;";
+		String delsql = "DELETE FROM " + UsersContract.TABLE_NAME
+				+ " WHERE " + UsersContract.ID + " = ?;";
 		try(
 				Connection cn = jdbcTemplate.getDataSource().getConnection();
-				PreparedStatement ps = cn.prepareStatement(Delsql);
+				PreparedStatement ps = cn.prepareStatement(delsql);
 			){
 			ps.setInt(1, id);
 			res = ps.executeUpdate() > 0;
@@ -153,20 +199,20 @@ public class UserDAO implements ICrud<User,Integer>{
 	@Override
 	public ArrayList<User> findAll() {
 		ArrayList<User> users = null;
-		String Allsql = "SELECT * FROM " + UserContract.TABLE_NAME;
+		String allsql = "SELECT * FROM " + UsersContract.TABLE_NAME;
 		
 		try(
 				Connection cn = jdbcTemplate.getDataSource().getConnection();
-				PreparedStatement ps = cn.prepareStatement(Allsql);
+				PreparedStatement ps = cn.prepareStatement(allsql);
 			){
 			ResultSet rs = ps.executeQuery();
 			users = new ArrayList();
 			while(rs.next()) {
-				int id = rs.getInt(UserContract.ID);
-				String nick = rs.getString(UserContract.NICK);
-				String email = rs.getString(UserContract.EMAIL);
-				String hashpw = rs.getString(UserContract.PASSWORD);
-				String role = rs.getString(UserContract.ROLE);
+				int id = rs.getInt(UsersContract.ID);
+				String nick = rs.getString(UsersContract.NICK);
+				String email = rs.getString(UsersContract.EMAIL);
+				String hashpw = rs.getString(UsersContract.PASSWORD);
+				String role = rs.getString(UsersContract.ROLE);
 				users.add(new User(id,nick,email,hashpw,role));
 			}
 		} catch (SQLException e) {
@@ -176,5 +222,55 @@ public class UserDAO implements ICrud<User,Integer>{
 		}
 		
 		return users;
+	}
+	
+	public String saveRole(String dao) {
+		String role = null;
+		
+		String sql = "INSERT INTO " + RolesContract.TABLE_NAME + "("
+				+ RolesContract.NAME + ") "
+				+ "VALUES(?);";
+		
+		try(
+				Connection cn = jdbcTemplate.getDataSource().getConnection();
+				PreparedStatement ps = cn.prepareStatement(sql);
+		){
+			ps.setString(1, dao);
+			int cantidad = ps.executeUpdate();
+			if (cantidad > 0) {
+				role = dao;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			role = null;
+		}
+		
+		return role;
+	}
+	
+	public String findAllRoles(String roleToCheck) {
+		String role = null;
+		
+		String sql = "SELECT * FROM " + RolesContract.TABLE_NAME + ";";
+		
+		try(
+			Connection cn = jdbcTemplate.getDataSource().getConnection();
+			PreparedStatement ps = cn.prepareStatement(sql);
+		){
+			ResultSet rs = ps.executeQuery();
+			while (rs.next() && !roleToCheck.equals(role)) {//This checks if the role exists
+				role = rs.getString(1);
+			}
+			if (!roleToCheck.equals(role)) {//This double checks if the role exists, because it could have exited the while but it doesnt exist
+				role = null;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			role = null;
+		}
+		
+		return role;
 	}
 }

@@ -1,7 +1,7 @@
 package es.joja.Brawdle.contract;
 
-public class UserContract {
-    private UserContract() {}
+public class UsersContract {
+    private UsersContract() {}
     public static final String TABLE_NAME = "users";
     public static final String ID = "id";
     public static final String NICK = "nick";
