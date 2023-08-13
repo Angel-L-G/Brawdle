@@ -9,7 +9,7 @@ public class User implements Serializable {
 	private String email;
 	private String password;
 	private String role;
-	private ArrayList<GameDetails> games;
+	private ArrayList<GameDetails> gameDetails;
 
     public User() {
     }
@@ -19,7 +19,7 @@ public class User implements Serializable {
         this.nick = nick;
         this.email = email;
         this.password = password;
-        this.games = new ArrayList<>();
+        this.gameDetails = new ArrayList<>();
         if(role.isBlank() || role.isEmpty() || role == null) {
         	this.setRole("User");
         } else {
@@ -59,12 +59,12 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public ArrayList<GameDetails> getGames() {
-        return games;
+    public ArrayList<GameDetails> getDetails() {
+        return gameDetails;
     }
 
-    public void setGames(ArrayList<GameDetails> games) {
-        this.games = games;
+    public void setDetails(ArrayList<GameDetails> gameDetails) {
+        this.gameDetails = gameDetails;
     }
 
 	public String getRole() {

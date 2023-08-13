@@ -87,7 +87,7 @@ public class UserDAO implements ICrud<User,Integer>{
 	        			GameDetails detail = new GameDetails(game, 0, false);
 						details.add(detail);
 					}
-	        		dao.setGames(details);
+	        		dao.setDetails(details);
 	        		for (int i = 0; i < details.size() && ok; i++) {
 	        			GameDetails detail = details.get(i);
 	        			psDetail.setInt(1, detail.getGame().getId());
@@ -170,7 +170,7 @@ public class UserDAO implements ICrud<User,Integer>{
 					GameDetails detail = new GameDetails(game, numTries, guessed);
 					details.add(detail);
 				}
-				user.setGames(details);
+				user.setDetails(details);
 			}
 			
 		} catch (SQLException e) {
@@ -196,20 +196,39 @@ public class UserDAO implements ICrud<User,Integer>{
 
 	@Override
 	public boolean delete(Integer id) {//Completly deletes the user
-		boolean res = false;
-		String sql = "DELETE FROM " + UsersContract.TABLE_NAME
+		boolean ok = false;
+		
+		String detailsql = "DELETE FROM " + GamesUsersContract.TABLE_NAME
+				+ " WHERE " + GamesUsersContract.USER_ID + " = ?;";
+		
+		String usersql = "DELETE FROM " + UsersContract.TABLE_NAME
 				+ " WHERE " + UsersContract.ID + " = ?;";
 		try(
 				Connection cn = jdbcTemplate.getDataSource().getConnection();
-				PreparedStatement ps = cn.prepareStatement(sql);
+				PreparedStatement psUser = cn.prepareStatement(usersql);
+				PreparedStatement psDetail = cn.prepareStatement(detailsql);
 			){
-			ps.setInt(1, id);
-			res = ps.executeUpdate() > 0;
+			cn.setAutoCommit(false);
+			psDetail.setInt(1, id);
+			ok = psDetail.executeUpdate() > 0;
+			if (ok) {
+				psUser.setInt(1, id);
+				ok = psUser.executeUpdate() > 0;
+				if (ok) {
+					cn.commit();
+				} else {
+					cn.rollback();
+				}
+			} else {
+				cn.rollback();
+			}
+			cn.setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			ok = false;
 		}
 		
-		return res;
+		return ok;
 	}
 
 	public boolean deleteSavely(Integer id) {//Only changes the "deleted" attribute
@@ -237,14 +256,16 @@ public class UserDAO implements ICrud<User,Integer>{
 		String usersql = "SELECT * FROM " + UsersContract.TABLE_NAME;
 		
 		String detailsql = "SELECT * FROM " + GamesUsersContract.TABLE_NAME
-				;
+				+ " WHERE " + GamesUsersContract.USER_ID + " = ?;";
 		
 		try(
 				Connection cn = jdbcTemplate.getDataSource().getConnection();
 				PreparedStatement psUser = cn.prepareStatement(usersql);
+				PreparedStatement psDetail = cn.prepareStatement(detailsql);
 			){
 			ResultSet rsUser = psUser.executeQuery();
 			users = new ArrayList();
+			
 			while(rsUser.next()) {
 				int id = rsUser.getInt(UsersContract.ID);
 				String nick = rsUser.getString(UsersContract.NICK);
@@ -253,6 +274,23 @@ public class UserDAO implements ICrud<User,Integer>{
 				String role = rsUser.getString(UsersContract.ROLE);
 				User user = new User(id,nick,email,hashpw,role);
 				
+				psDetail.setInt(1, id);
+				ArrayList<GameDetails> details = new ArrayList();
+				ResultSet rsDetail = psDetail.executeQuery();
+				
+				while (rsDetail.next()) {
+					int gameId = rsDetail.getInt(GamesUsersContract.GAME_ID);
+					Game game = gameDAO.findById(gameId);
+					int numTries = rsDetail.getInt(GamesUsersContract.NUM_TRIES);
+					boolean guessed = false;
+					if (rsDetail.getInt(GamesUsersContract.GUESSED) != 0) {
+						guessed = true;
+					}
+					GameDetails detail = new GameDetails(game, numTries, guessed);
+					details.add(detail);
+				}
+				
+				user.setDetails(details);
 				users.add(user);
 			}
 		} catch (SQLException e) {
