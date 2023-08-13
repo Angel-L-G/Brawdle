@@ -9,6 +9,7 @@ public class User implements Serializable {
 	private String email;
 	private String password;
 	private String role;
+	private boolean deleted;
 	private ArrayList<GameDetails> games;
 
     public User() {
@@ -25,6 +26,7 @@ public class User implements Serializable {
         } else {
 			this.setRole(role);
         }
+        this.deleted = false;
     }
 
     public Integer getId() {
@@ -66,12 +68,6 @@ public class User implements Serializable {
     public void setGames(ArrayList<GameDetails> games) {
         this.games = games;
     }
-    
-    public void addGames(GameDetails gd) {
-    	if(gd != null) {
-    		games.add(gd);
-    	}
-    }
 
 	public String getRole() {
 		return role;
@@ -79,5 +75,13 @@ public class User implements Serializable {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 }
