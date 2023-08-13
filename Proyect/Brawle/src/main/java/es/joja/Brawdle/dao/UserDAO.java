@@ -41,16 +41,14 @@ public class UserDAO implements ICrud<User,Integer>{
         		+ UsersContract.NICK + ","
         		+ UsersContract.EMAIL + ","
         		+ UsersContract.PASSWORD + ","
-        		+ UsersContract.ROLE + ","
-        		+ UsersContract.DELETED + ") "
-        		+ "VALUES(?,?,?,?,?,?);";
+        		+ UsersContract.ROLE + ") "
+        		+ "VALUES(?,?,?,?,?);";
         
         String detailsql = "INSERT INTO " + GamesUsersContract.TABLE_NAME + "("
         		+ GamesUsersContract.GAME_ID + ","
         		+ GamesUsersContract.USER_ID + ","
         		+ GamesUsersContract.NUM_TRIES + ","
-        		+ GamesUsersContract.GUESSED + ","
-        		+ ") "
+        		+ GamesUsersContract.GUESSED + ") "
         		+ "VALUES(?,?,?,?);";
         
         
@@ -185,36 +183,36 @@ public class UserDAO implements ICrud<User,Integer>{
 
 	@Override
 	public boolean update(User dao) {//Owen: I left it as we could not change the ids
-		boolean res = false;
-		String updatesql = "UPDATE " + UsersContract.TABLE_NAME + " SET " 
-		+ UsersContract.NICK + " = ?," 
-		+ UsersContract.EMAIL + " = ?," 
-		+ UsersContract.PASSWORD + " = ?," 
-		+ UsersContract.ROLE + " = ?," 
-		+ UsersContract.DELETED + " = 0" //if you use the update, the user will be "revived"
-		+ " WHERE " + UsersContract.ID + " = ?;";
+		boolean ok = false;
 		
-		try(
-				Connection cn = jdbcTemplate.getDataSource().getConnection();
-				PreparedStatement ps = cn.prepareStatement(updatesql);
-		){
-			ps.setString(1, dao.getNick());
-			ps.setString(2, dao.getEmail());
-			ps.setString(3, dao.getPassword());
-			ps.setString(4, dao.getRole());
-			ps.setInt(5, dao.getId());
-			res = ps.executeUpdate() > 0;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (delete(dao.getId()) == true) {
+			if (save(dao) != null) {
+				ok = true;
+			}
 		}
 		
+		return ok;
+	}
+
+	@Override
+	public boolean delete(Integer id) {//Completly deletes the user
+		boolean res = false;
+		String sql = "DELETE FROM " + UsersContract.TABLE_NAME
+				+ " WHERE " + UsersContract.ID + " = ?;";
+		try(
+				Connection cn = jdbcTemplate.getDataSource().getConnection();
+				PreparedStatement ps = cn.prepareStatement(sql);
+			){
+			ps.setInt(1, id);
+			res = ps.executeUpdate() > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
 		return res;
 	}
 
-	@Override
-	public boolean delete(Integer id) {
+	public boolean deleteSavely(Integer id) {//Only changes the "deleted" attribute
 		boolean res = false;
 		String sql = "UPDATE " + UsersContract.TABLE_NAME + " SET "
 				+ UsersContract.DELETED + " = 1"
@@ -231,25 +229,30 @@ public class UserDAO implements ICrud<User,Integer>{
 		
 		return res;
 	}
-
+	
 	@Override
 	public ArrayList<User> findAll() {
 		ArrayList<User> users = null;
-		String allsql = "SELECT * FROM " + UsersContract.TABLE_NAME;
+		
+		String usersql = "SELECT * FROM " + UsersContract.TABLE_NAME;
+		
+		String detailsql = "SELECT * FROM " + GamesUsersContract.TABLE_NAME
+				;
 		
 		try(
 				Connection cn = jdbcTemplate.getDataSource().getConnection();
-				PreparedStatement ps = cn.prepareStatement(allsql);
+				PreparedStatement psUser = cn.prepareStatement(usersql);
 			){
-			ResultSet rs = ps.executeQuery();
+			ResultSet rsUser = psUser.executeQuery();
 			users = new ArrayList();
-			while(rs.next()) {
-				int id = rs.getInt(UsersContract.ID);
-				String nick = rs.getString(UsersContract.NICK);
-				String email = rs.getString(UsersContract.EMAIL);
-				String hashpw = rs.getString(UsersContract.PASSWORD);
-				String role = rs.getString(UsersContract.ROLE);
+			while(rsUser.next()) {
+				int id = rsUser.getInt(UsersContract.ID);
+				String nick = rsUser.getString(UsersContract.NICK);
+				String email = rsUser.getString(UsersContract.EMAIL);
+				String hashpw = rsUser.getString(UsersContract.PASSWORD);
+				String role = rsUser.getString(UsersContract.ROLE);
 				User user = new User(id,nick,email,hashpw,role);
+				
 				users.add(user);
 			}
 		} catch (SQLException e) {
