@@ -136,10 +136,10 @@ public class UserDAO implements ICrud<User,Integer>{
 		User user = null;
 		
 		String usersql = "SELECT * FROM " + UsersContract.TABLE_NAME
-				+ " WHERE " + UsersContract.ID + " = ?";
+				+ " WHERE " + UsersContract.ID + " = ?;";
 		
 		String detailsql = "SELECT * FROM " + GamesUsersContract.TABLE_NAME
-				+ " WHERE " + GamesUsersContract.USER_ID + "=?;";
+				+ " WHERE " + GamesUsersContract.USER_ID + " = ?;";
 		
 		
 		try(
@@ -148,25 +148,25 @@ public class UserDAO implements ICrud<User,Integer>{
 				PreparedStatement psDetail = cn.prepareStatement(detailsql);
 		){
 			psUser.setInt(1, id);
-			ResultSet rs = psUser.executeQuery();
+			ResultSet rsUser = psUser.executeQuery();
 			
-			if(rs.next()) {
-				String nick = rs.getString(UsersContract.NICK);
-				String email = rs.getString(UsersContract.EMAIL);
-				String hashpw = rs.getString(UsersContract.PASSWORD);
-				String role = rs.getString(UsersContract.ROLE);
+			if(rsUser.next()) {
+				String nick = rsUser.getString(UsersContract.NICK);
+				String email = rsUser.getString(UsersContract.EMAIL);
+				String hashpw = rsUser.getString(UsersContract.PASSWORD);
+				String role = rsUser.getString(UsersContract.ROLE);
 				
 				user = new User(id,nick,email,hashpw,role);
 				
 				psDetail.setInt(1, id);
-				ResultSet rs2 = psDetail.executeQuery();
+				ResultSet rsDetail = psDetail.executeQuery();
         		ArrayList<GameDetails> details = new ArrayList();
-				while (rs2.next()) {
-					int gameId = rs2.getInt(GamesUsersContract.GAME_ID);
+				while (rsDetail.next()) {
+					int gameId = rsDetail.getInt(GamesUsersContract.GAME_ID);
 					Game game = gameDAO.findById(gameId);
-					int numTries = rs2.getInt(GamesUsersContract.NUM_TRIES);
+					int numTries = rsDetail.getInt(GamesUsersContract.NUM_TRIES);
 					boolean guessed = false;
-					if (rs2.getInt(GamesUsersContract.GUESSED) != 0) {
+					if (rsDetail.getInt(GamesUsersContract.GUESSED) != 0) {
 						guessed = true;
 					}
 					GameDetails detail = new GameDetails(game, numTries, guessed);
@@ -186,12 +186,13 @@ public class UserDAO implements ICrud<User,Integer>{
 	@Override
 	public boolean update(User dao) {//Owen: I left it as we could not change the ids
 		boolean res = false;
-		String updatesql = "UPDATE " + UsersContract.TABLE_NAME + " SET " +
-		UsersContract.NICK + "= ?," +
-		UsersContract.EMAIL + "= ?," +
-		UsersContract.PASSWORD + "= ?," +
-		UsersContract.ROLE + "= ?" +
-		" WHERE " + UsersContract.ID + " = ?;"; 
+		String updatesql = "UPDATE " + UsersContract.TABLE_NAME + " SET " 
+		+ UsersContract.NICK + " = ?," 
+		+ UsersContract.EMAIL + " = ?," 
+		+ UsersContract.PASSWORD + " = ?," 
+		+ UsersContract.ROLE + " = ?," 
+		+ UsersContract.DELETED + " = 0" //if you use the update, the user will be "revived"
+		+ " WHERE " + UsersContract.ID + " = ?;";
 		
 		try(
 				Connection cn = jdbcTemplate.getDataSource().getConnection();
@@ -215,11 +216,12 @@ public class UserDAO implements ICrud<User,Integer>{
 	@Override
 	public boolean delete(Integer id) {
 		boolean res = false;
-		String delsql = "DELETE FROM " + UsersContract.TABLE_NAME
+		String sql = "UPDATE " + UsersContract.TABLE_NAME + " SET "
+				+ UsersContract.DELETED + " = 1"
 				+ " WHERE " + UsersContract.ID + " = ?;";
 		try(
 				Connection cn = jdbcTemplate.getDataSource().getConnection();
-				PreparedStatement ps = cn.prepareStatement(delsql);
+				PreparedStatement ps = cn.prepareStatement(sql);
 			){
 			ps.setInt(1, id);
 			res = ps.executeUpdate() > 0;
@@ -247,7 +249,8 @@ public class UserDAO implements ICrud<User,Integer>{
 				String email = rs.getString(UsersContract.EMAIL);
 				String hashpw = rs.getString(UsersContract.PASSWORD);
 				String role = rs.getString(UsersContract.ROLE);
-				users.add(new User(id,nick,email,hashpw,role));
+				User user = new User(id,nick,email,hashpw,role);
+				users.add(user);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
