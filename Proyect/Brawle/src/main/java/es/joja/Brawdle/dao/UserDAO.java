@@ -41,8 +41,9 @@ public class UserDAO implements ICrud<User,Integer>{
         		+ UsersContract.NICK + ","
         		+ UsersContract.EMAIL + ","
         		+ UsersContract.PASSWORD + ","
-        		+ UsersContract.ROLE + ") "
-        		+ "VALUES(?,?,?,?,?);";
+        		+ UsersContract.ROLE + ","
+        		+ UsersContract.DELETED + ") "
+        		+ "VALUES(?,?,?,?,?,?);";
         
         String detailsql = "INSERT INTO " + GamesUsersContract.TABLE_NAME + "("
         		+ GamesUsersContract.GAME_ID + ","
@@ -134,13 +135,20 @@ public class UserDAO implements ICrud<User,Integer>{
 	public User findById(Integer id) {
 		User user = null;
 		
-		String findsql = "SELECT * FROM " + UsersContract.TABLE_NAME
-				+ "WHERE " + UsersContract.ID + " = ?";
+		String usersql = "SELECT * FROM " + UsersContract.TABLE_NAME
+				+ " WHERE " + UsersContract.ID + " = ?";
+		
+		String detailsql = "SELECT * FROM " + GamesUsersContract.TABLE_NAME
+				+ " WHERE " + GamesUsersContract.USER_ID + "=?;";
+		
+		
 		try(
-				Connection cn = jdbcTemplate.getDataSource().getConnection(); PreparedStatement ps = cn.prepareStatement(findsql); 
+				Connection cn = jdbcTemplate.getDataSource().getConnection(); 
+				PreparedStatement psUser = cn.prepareStatement(usersql);
+				PreparedStatement psDetail = cn.prepareStatement(detailsql);
 		){
-			ps.setInt(1, id);
-			ResultSet rs = ps.executeQuery();
+			psUser.setInt(1, id);
+			ResultSet rs = psUser.executeQuery();
 			
 			if(rs.next()) {
 				String nick = rs.getString(UsersContract.NICK);
@@ -149,6 +157,22 @@ public class UserDAO implements ICrud<User,Integer>{
 				String role = rs.getString(UsersContract.ROLE);
 				
 				user = new User(id,nick,email,hashpw,role);
+				
+				psDetail.setInt(1, id);
+				ResultSet rs2 = psDetail.executeQuery();
+        		ArrayList<GameDetails> details = new ArrayList();
+				while (rs2.next()) {
+					int gameId = rs2.getInt(GamesUsersContract.GAME_ID);
+					Game game = gameDAO.findById(gameId);
+					int numTries = rs2.getInt(GamesUsersContract.NUM_TRIES);
+					boolean guessed = false;
+					if (rs2.getInt(GamesUsersContract.GUESSED) != 0) {
+						guessed = true;
+					}
+					GameDetails detail = new GameDetails(game, numTries, guessed);
+					details.add(detail);
+				}
+				user.setGames(details);
 			}
 			
 		} catch (SQLException e) {

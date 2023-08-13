@@ -13,7 +13,7 @@ import es.joja.Brawdle.contract.GamesContract;
 import es.joja.Brawdle.entity.Game;
 
 @Repository
-public class GameDAO implements ICrud<Game ,String>{
+public class GameDAO implements ICrud<Game ,Integer>{
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -44,7 +44,7 @@ public class GameDAO implements ICrud<Game ,String>{
     }
 
     @Override
-    public Game findById(String id) {
+    public Game findById(Integer id) {
         return null;
     }
 
@@ -54,7 +54,7 @@ public class GameDAO implements ICrud<Game ,String>{
     }
 
     @Override
-    public boolean delete(String id) {
+    public boolean delete(Integer id) {
         return false;
     }
 
