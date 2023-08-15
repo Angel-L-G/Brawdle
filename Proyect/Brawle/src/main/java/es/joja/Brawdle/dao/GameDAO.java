@@ -84,7 +84,7 @@ public class GameDAO implements ICrud<Game ,Integer>{
     public boolean update(Game dao) {
         boolean ok = false;
         
-        if (delete(dao.getId()) == true) {
+        if (delete(dao.getId())) {
 			if (save(dao) != null) {
 				ok = true;
 			}

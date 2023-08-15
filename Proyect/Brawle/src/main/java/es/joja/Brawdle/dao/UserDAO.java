@@ -60,7 +60,7 @@ public class UserDAO implements ICrud<User,Integer>{
         ) {
         	
         	cn.setAutoCommit(false);
-        	String role = findAllRoles(dao.getRole());
+        	String role = checkRoles(dao.getRole());
         	if (role == null) {//This checks if it exists
         		role = saveRole(dao.getRole());
         		if (role == null) {//This inserts it if it does not exist
@@ -185,7 +185,7 @@ public class UserDAO implements ICrud<User,Integer>{
 	public boolean update(User dao) {//Owen: I left it as we could not change the ids
 		boolean ok = false;
 		
-		if (delete(dao.getId()) == true) {
+		if (delete(dao.getId())) {
 			if (save(dao) != null) {
 				ok = true;
 			}
@@ -302,7 +302,7 @@ public class UserDAO implements ICrud<User,Integer>{
 		return users;
 	}
 	
-	public String saveRole(String dao) {
+	public String saveRole(String name) {
 		String role = null;
 		
 		String sql = "INSERT INTO " + RolesContract.TABLE_NAME + "("
@@ -313,10 +313,10 @@ public class UserDAO implements ICrud<User,Integer>{
 				Connection cn = jdbcTemplate.getDataSource().getConnection();
 				PreparedStatement ps = cn.prepareStatement(sql);
 		){
-			ps.setString(1, dao);
+			ps.setString(1, name);
 			int cantidad = ps.executeUpdate();
 			if (cantidad > 0) {
-				role = dao;
+				role = name;
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -327,7 +327,7 @@ public class UserDAO implements ICrud<User,Integer>{
 		return role;
 	}
 	
-	public String findAllRoles(String roleToCheck) {
+	public String checkRoles(String roleToCheck) {
 		String role = null;
 		
 		String sql = "SELECT * FROM " + RolesContract.TABLE_NAME + ";";
