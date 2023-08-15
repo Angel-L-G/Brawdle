@@ -16,7 +16,11 @@ public class LegendDAO implements ICrud<Legend, Integer>{
 	
     @Override
     public Legend save(Legend dao) {
-        return null;
+    	Legend legend = null;
+    	
+    	
+    	
+        return legend;
     }
 
     @Override
@@ -26,7 +30,15 @@ public class LegendDAO implements ICrud<Legend, Integer>{
 
     @Override
     public boolean update(Legend dao) {
-        return false;
+    	boolean ok = false;
+        
+        if (delete(dao.getId()) == true) {
+			if (save(dao) != null) {
+				ok = true;
+			}
+		}
+        
+        return ok;
     }
 
     @Override
