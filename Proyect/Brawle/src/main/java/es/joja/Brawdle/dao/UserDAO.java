@@ -182,7 +182,7 @@ public class UserDAO implements ICrud<User,Integer>{
 	}
 
 	@Override
-	public boolean update(User dao) {//Owen: I left it as we could not change the ids
+	public boolean update(User dao) {
 		boolean ok = false;
 		
 		if (delete(dao.getId())) {
@@ -331,7 +331,7 @@ public class UserDAO implements ICrud<User,Integer>{
 		String role = null;
 		
 		String sql = "SELECT * FROM " + RolesContract.TABLE_NAME
-				+ " WHERE " + RolesContract.NAME + ";";
+				+ " WHERE " + RolesContract.NAME + " = ?;";
 		
 		try(
 			Connection cn = jdbcTemplate.getDataSource().getConnection();
@@ -340,7 +340,7 @@ public class UserDAO implements ICrud<User,Integer>{
 			ps.setString(1, roleToCheck);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				role = rs.getString(1);
+				role = rs.getString(RolesContract.NAME);
 			}
 			
 		} catch (SQLException e) {

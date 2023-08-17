@@ -58,7 +58,7 @@ public class LegendDAO implements ICrud<Legend, Integer>{
     		cn.setAutoCommit(false);
     		for (int i = 0; i < dao.getWeapons().length && ok; i++) {//Checks if the wepons exists
     			String weaponToCheck = dao.getWeapons()[i];
-				String weapon = checkWeapons(weaponToCheck);
+				String weapon = findWeapon(weaponToCheck);
 				if (weapon == null) {//This checks if it exists
 					weapon = saveWeapon(weaponToCheck);//This inserts if it does not exist
 					if (weapon == null) {//This checks if something went wrong
@@ -69,7 +69,7 @@ public class LegendDAO implements ICrud<Legend, Integer>{
     		if (ok) {
     			for (int i = 0; i < dao.getRaces().size() && ok; i++) {//Checks if the races exists
     				String raceToCheck = dao.getRaces().get(i);
-    				String race = checkRaces(raceToCheck);
+    				String race = findRace(raceToCheck);
     				if (race == null) {//This checks if it exists
     					race = saveRace(raceToCheck);//This inserts if it does not exist
     					if (race == null) {//This checks if something went wrong
@@ -78,7 +78,7 @@ public class LegendDAO implements ICrud<Legend, Integer>{
     				}
     			}
     			if (ok) {
-        			String gender = checkGenders(dao.getGender());//Checks if the gender exists
+        			String gender = findGender(dao.getGender());//Checks if the gender exists
                 	if (gender == null) {//This checks if it exists
                 		gender = saveGender(dao.getGender());//This inserts it if it does not exist
                 		if (gender == null) {//This checks if something went wrong
@@ -86,7 +86,7 @@ public class LegendDAO implements ICrud<Legend, Integer>{
                 		}
                 	}
                 	if (ok) {
-            			int year = checkYears(dao.getYear());//Checks if the year exists
+            			int year = findYear(dao.getYear());//Checks if the year exists
                     	if (year == 0) {//This checks if it exists
                     		year = saveYear(dao.getYear());//This inserts it if it does not exist
                     		if (year == 0) {//This checks if something went wrong
@@ -163,7 +163,53 @@ public class LegendDAO implements ICrud<Legend, Integer>{
     public Legend findById(Integer id) {
         Legend legend = null;
         
-        boolean ok = true;
+        String legendsql = "SELECT * FROM " + LegendsContract.TABLE_NAME
+        		+ " WHERE " + LegendsContract.ID + " = ?;";
+        
+        String lwsql = "SELECT * FROM " + LegendsWeaponsContract.TABLE_NAME
+        		+ " WHERE " + LegendsWeaponsContract.LEGEND_ID + " = ?;";
+
+        String lrsql = "SELECT * FROM " + LegendsRacesContract.TABLE_NAME
+        		+ " WHERE " + LegendsRacesContract.LEGEND_ID + " = ?;";
+        
+        try(
+        	Connection cn = jdbcTemplate.getDataSource().getConnection();
+        	PreparedStatement psLegend = cn.prepareStatement(legendsql);
+    		PreparedStatement psLW = cn.prepareStatement(lwsql);
+    		PreparedStatement psLR = cn.prepareStatement(lrsql);
+        ){
+        	
+        	psLegend.setInt(1, id);
+        	ResultSet rsLegend = psLegend.executeQuery();
+        	
+        	if (rsLegend.next()) {
+        		String name = rsLegend.getString(LegendsContract.NAME);
+        		String gender = rsLegend.getString(LegendsContract.GENDER_NAME);
+        		int year = rsLegend.getInt(LegendsContract.YEAR_NUM);
+        		
+        		psLW.setInt(1, id);
+        		ResultSet rsLW = psLW.executeQuery();
+        		String weapons[] = new String[2];
+        		for (int i = 0; rsLW.next(); i++) {
+        			String weapon = rsLW.getString(LegendsWeaponsContract.WEAPON_NAME);
+        			weapons[i] = weapon;
+        		}
+        		
+        		psLR.setInt(1, id);
+        		ResultSet rsLR = psLR.executeQuery();
+        		ArrayList<String> races = new ArrayList();
+        		while (rsLR.next()) {
+        			String race = rsLR.getString(LegendsRacesContract.RACE_NAME);
+        			races.add(race);
+        		}
+        		
+        		legend = new Legend(id, name, races, gender, year, weapons);
+        	}
+        } catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			legend = null;
+		}
         
         return legend;
     }
@@ -183,7 +229,9 @@ public class LegendDAO implements ICrud<Legend, Integer>{
 
     @Override
     public boolean delete(Integer id) {
-        return false;
+        boolean ok = true;
+        
+        return ok;
     }
 
     @Override
@@ -218,21 +266,20 @@ public class LegendDAO implements ICrud<Legend, Integer>{
     	return weapon;
     }
     
-    public String checkWeapons(String weaponToCheck) {
+    public String findWeapon(String weaponToCheck) {
 		String weapon = null;
 		
-		String sql = "SELECT * FROM " + WeaponsContract.TABLE_NAME + ";";
+		String sql = "SELECT * FROM " + WeaponsContract.TABLE_NAME 
+				+ " WHERE " + WeaponsContract.NAME + " = ?;";
 		
 		try(
 			Connection cn = jdbcTemplate.getDataSource().getConnection();
 			PreparedStatement ps = cn.prepareStatement(sql);
 		){
+			ps.setString(1, weaponToCheck);
 			ResultSet rs = ps.executeQuery();
-			while (rs.next() && !weaponToCheck.equals(weapon)) {//This checks if the weapon exists
-				weapon = rs.getString(1);
-			}
-			if (!weaponToCheck.equals(weapon)) {//This double checks if the weapon exists, because it could have exited the while but it doesnt exist
-				weapon = null;
+			if (rs.next()) {
+				weapon = rs.getString(WeaponsContract.NAME);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -270,21 +317,20 @@ public class LegendDAO implements ICrud<Legend, Integer>{
     	return race;
     }
     
-    public String checkRaces(String raceToCheck) {
+    public String findRace(String raceToCheck) {
 		String race = null;
 		
-		String sql = "SELECT * FROM " + RacesContract.TABLE_NAME + ";";
+		String sql = "SELECT * FROM " + RacesContract.TABLE_NAME 
+				+ "WHERE " + RacesContract.NAME + " = ?;";
 		
 		try(
 			Connection cn = jdbcTemplate.getDataSource().getConnection();
 			PreparedStatement ps = cn.prepareStatement(sql);
 		){
+			ps.setString(1, raceToCheck);
 			ResultSet rs = ps.executeQuery();
-			while (rs.next() && !raceToCheck.equals(race)) {//This checks if the role exists
-				race = rs.getString(1);
-			}
-			if (!raceToCheck.equals(race)) {//This double checks if the role exists, because it could have exited the while but it doesnt exist
-				race = null;
+			while (rs.next()) {
+				race = rs.getString(RacesContract.NAME);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -322,21 +368,20 @@ public class LegendDAO implements ICrud<Legend, Integer>{
     	return year;
     }
     
-    public int checkYears(int yearToCheck) {
+    public int findYear(int yearToCheck) {
 		int year = 0;
 		
-		String sql = "SELECT * FROM " + YearsContract.TABLE_NAME + ";";
+		String sql = "SELECT * FROM " + YearsContract.TABLE_NAME 
+				+ " WHERE " + YearsContract.NUM + " = ?;";
 		
 		try(
 			Connection cn = jdbcTemplate.getDataSource().getConnection();
 			PreparedStatement ps = cn.prepareStatement(sql);
 		){
+			ps.setInt(1, yearToCheck);
 			ResultSet rs = ps.executeQuery();
-			while (rs.next() && yearToCheck != year) {//This checks if the role exists
-				year = rs.getInt(1);
-			}
-			if (yearToCheck != year) {//This double checks if the role exists, because it could have exited the while but it doesnt exist
-				year = 0;
+			while (rs.next()) {
+				year = rs.getInt(YearsContract.NUM);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -374,21 +419,20 @@ public class LegendDAO implements ICrud<Legend, Integer>{
     	return gender;
     }
     
-    public String checkGenders(String genderToCheck) {
+    public String findGender(String genderToCheck) {
 		String gender = null;
 		
-		String sql = "SELECT * FROM " + GendersContract.TABLE_NAME + ";";
+		String sql = "SELECT * FROM " + GendersContract.TABLE_NAME 
+				+ " WHERE " + GendersContract.NAME + " = ?;";
 		
 		try(
 			Connection cn = jdbcTemplate.getDataSource().getConnection();
 			PreparedStatement ps = cn.prepareStatement(sql);
 		){
+			ps.setString(1, genderToCheck);
 			ResultSet rs = ps.executeQuery();
-			while (rs.next() && !genderToCheck.equals(gender)) {//This checks if the role exists
-				gender = rs.getString(1);
-			}
-			if (!genderToCheck.equals(gender)) {//This double checks if the role exists, because it could have exited the while but it doesnt exist
-				gender = null;
+			while (rs.next()) {
+				gender = rs.getString(GendersContract.NAME);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
