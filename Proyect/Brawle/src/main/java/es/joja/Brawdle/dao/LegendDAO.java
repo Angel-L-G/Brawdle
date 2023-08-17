@@ -98,7 +98,7 @@ public class LegendDAO implements ICrud<Legend, Integer>{
     		}
     		
     		
-    		if (ok) {
+    		if (ok) {//if the checks were ok
 	    		if (dao.getId() == null) {
 	    			psLegend.setNull(1, Types.NULL);
 	    		} else {
@@ -119,11 +119,30 @@ public class LegendDAO implements ICrud<Legend, Integer>{
             				legend.setId(idNew);
             			}
             		}
-	    		} else {
-	    			cn.rollback();
-	    			legend = null;
+	    			
+	    			for (int i = 0; i < dao.getWeapons().length && ok; i++) {//This is to insert on the middle table
+						psLW.setInt(1, dao.getId());
+						psLW.setString(2, dao.getWeapons()[i]);
+						
+						ok = psLW.executeUpdate() > 0;
+					}
+	    			
+	    			if (ok) {
+	    				for (int i = 0; i < dao.getRaces().size() && ok; i++) {//This is to insert on the middle table
+	    					psLR.setInt(1, dao.getId());
+							psLR.setString(2, dao.getRaces().get(i));
+							
+							ok = psLR.executeUpdate() > 0;
+						}
+	    			}
+	    			
 	    		}
 	    		
+	    		
+    		} 
+    		
+    		if (ok) {
+    			cn.commit();
     		} else {
     			cn.rollback();
     			legend = null;
@@ -142,7 +161,11 @@ public class LegendDAO implements ICrud<Legend, Integer>{
 
     @Override
     public Legend findById(Integer id) {
-        return null;
+        Legend legend = null;
+        
+        boolean ok = true;
+        
+        return legend;
     }
 
     @Override
