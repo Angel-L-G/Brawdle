@@ -56,90 +56,45 @@ public class LegendDAO implements ICrud<Legend, Integer>{
     		PreparedStatement psLR = cn.prepareStatement(lrsql);
     	){
     		cn.setAutoCommit(false);
-    		for (int i = 0; i < dao.getWeapons().length && ok; i++) {//Checks if the wepons exists
-    			String weaponToCheck = dao.getWeapons()[i];
-				String weapon = findWeapon(weaponToCheck);
-				if (weapon == null) {//This checks if it exists
-					weapon = saveWeapon(weaponToCheck);//This inserts if it does not exist
-					if (weapon == null) {//This checks if something went wrong
-						ok = false;
-					}
-				}
-			}
-    		if (ok) {
-    			for (int i = 0; i < dao.getRaces().size() && ok; i++) {//Checks if the races exists
-    				String raceToCheck = dao.getRaces().get(i);
-    				String race = findRace(raceToCheck);
-    				if (race == null) {//This checks if it exists
-    					race = saveRace(raceToCheck);//This inserts if it does not exist
-    					if (race == null) {//This checks if something went wrong
-    						ok = false;
-    					}
-    				}
-    			}
-    			if (ok) {
-        			String gender = findGender(dao.getGender());//Checks if the gender exists
-                	if (gender == null) {//This checks if it exists
-                		gender = saveGender(dao.getGender());//This inserts it if it does not exist
-                		if (gender == null) {//This checks if something went wrong
-                			ok = false;
-                		}
-                	}
-                	if (ok) {
-            			int year = findYear(dao.getYear());//Checks if the year exists
-                    	if (year == 0) {//This checks if it exists
-                    		year = saveYear(dao.getYear());//This inserts it if it does not exist
-                    		if (year == 0) {//This checks if something went wrong
-                    			ok = false;
-                    		}
-                    	}
-            		}
-        		}
+    		
+    		if (dao.getId() == null) {
+    			psLegend.setNull(1, Types.NULL);
+    		} else {
+    			psLegend.setInt(1, dao.getId());
     		}
     		
+    		psLegend.setString(2, dao.getName());
+    		psLegend.setString(3, dao.getGender());
+    		psLegend.setInt(4, dao.getYear());
+    		ok = psLegend.executeUpdate() > 0;
     		
-    		if (ok) {//if the checks were ok
-	    		if (dao.getId() == null) {
-	    			psLegend.setNull(1, Types.NULL);
-	    		} else {
-	    			psLegend.setInt(1, dao.getId());
-	    		}
-	    		
-	    		psLegend.setString(2, dao.getName());
-	    		psLegend.setString(3, dao.getGender());
-	    		psLegend.setInt(4, dao.getYear());
-	    		ok = psLegend.executeUpdate() > 0;
-	    		
-	    		if (ok) {
-	    			legend = dao;
-	    			if(dao.getId() == null) {
-            			ResultSet rs = psLegend.getGeneratedKeys();
-            			if (rs != null && rs.next()) {
-            				int idNew = rs.getInt(1);
-            				legend.setId(idNew);
-            			}
-            		}
-	    			
-	    			for (int i = 0; i < dao.getWeapons().length && ok; i++) {//This is to insert on the middle table
-						psLW.setInt(1, dao.getId());
-						psLW.setString(2, dao.getWeapons()[i]);
+    		if (ok) {
+    			legend = dao;
+    			if(dao.getId() == null) {
+        			ResultSet rs = psLegend.getGeneratedKeys();
+        			if (rs != null && rs.next()) {
+        				int idNew = rs.getInt(1);
+        				legend.setId(idNew);
+        			}
+        		}
+    			
+    			for (int i = 0; i < dao.getWeapons().length && ok; i++) {//This is to insert on the middle table
+					psLW.setInt(1, dao.getId());
+					psLW.setString(2, dao.getWeapons()[i]);
+					
+					ok = psLW.executeUpdate() > 0;
+				}
+    			
+    			if (ok) {
+    				for (int i = 0; i < dao.getRaces().size() && ok; i++) {//This is to insert on the middle table
+    					psLR.setInt(1, dao.getId());
+						psLR.setString(2, dao.getRaces().get(i));
 						
-						ok = psLW.executeUpdate() > 0;
+						ok = psLR.executeUpdate() > 0;
 					}
-	    			
-	    			if (ok) {
-	    				for (int i = 0; i < dao.getRaces().size() && ok; i++) {//This is to insert on the middle table
-	    					psLR.setInt(1, dao.getId());
-							psLR.setString(2, dao.getRaces().get(i));
-							
-							ok = psLR.executeUpdate() > 0;
-						}
-	    			}
-	    			
-	    		}
-	    		
-	    		
-    		} 
+    			}
+    			
+    		}
     		
     		if (ok) {
     			cn.commit();

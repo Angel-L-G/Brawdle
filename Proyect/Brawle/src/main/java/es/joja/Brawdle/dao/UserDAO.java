@@ -60,61 +60,51 @@ public class UserDAO implements ICrud<User,Integer>{
         ) {
         	
         	cn.setAutoCommit(false);
-        	String role = findRole(dao.getRole());
-        	if (role == null) {//This checks if it exists
-        		role = saveRole(dao.getRole());
-        		if (role == null) {//This inserts it if it does not exist
-        			ok = false;
+        	
+        	if (dao.getId() == null) {
+        		psUser.setNull(1, Types.NULL);
+        	} else {
+        		psUser.setInt(1, dao.getId());
+        	}
+        	
+        	psUser.setString(2, dao.getNick());
+        	psUser.setString(3, dao.getEmail());
+        	psUser.setString(4, dao.getPassword());
+        	psUser.setString(5, dao.getRole());
+        	
+        	ok = psUser.executeUpdate() > 0;
+        	if(ok) {
+        		ArrayList<Game> games = gameDAO.findAll();
+        		ArrayList<GameDetails> details = new ArrayList();
+        		for (Game game : games) {
+        			GameDetails detail = new GameDetails(game, 0, false);
+					details.add(detail);
+				}
+        		dao.setDetails(details);
+        		for (int i = 0; i < details.size() && ok; i++) {
+        			GameDetails detail = details.get(i);
+        			psDetail.setInt(1, detail.getGame().getId());
+            		psDetail.setInt(2, dao.getId());
+            		psDetail.setInt(3, detail.getNumTries());
+            		psDetail.setBoolean(4, detail.isGuessed());
+            		
+            		ok = psDetail.executeUpdate() > 0;
+				}
+        		if (ok) {
+        			cn.commit();
+        			user = dao;
+        			if(dao.getId() == null) {
+            			ResultSet rs = psUser.getGeneratedKeys();
+            			if (rs != null && rs.next()) {
+            				int idNew = rs.getInt(1);
+            				user.setId(idNew);
+            			}
+            		}
         		}
         	}
+        	
         	if (ok) {
-	        	if (dao.getId() == null) {
-	        		psUser.setNull(1, Types.NULL);
-	        	} else {
-	        		psUser.setInt(1, dao.getId());
-	        	}
-	        	
-	        	psUser.setString(2, dao.getNick());
-	        	psUser.setString(3, dao.getEmail());
-	        	psUser.setString(4, dao.getPassword());
-	        	psUser.setString(5, dao.getRole());
-	        	
-	        	ok = psUser.executeUpdate() > 0;
-	        	if(ok) {
-	        		ArrayList<Game> games = gameDAO.findAll();
-	        		ArrayList<GameDetails> details = new ArrayList();
-	        		for (Game game : games) {
-	        			GameDetails detail = new GameDetails(game, 0, false);
-						details.add(detail);
-					}
-	        		dao.setDetails(details);
-	        		for (int i = 0; i < details.size() && ok; i++) {
-	        			GameDetails detail = details.get(i);
-	        			psDetail.setInt(1, detail.getGame().getId());
-	            		psDetail.setInt(2, dao.getId());
-	            		psDetail.setInt(3, detail.getNumTries());
-	            		psDetail.setBoolean(4, detail.isGuessed());
-	            		
-	            		ok = psDetail.executeUpdate() > 0;
-					}
-	        		if (ok) {
-	        			cn.commit();
-	        			user = dao;
-	        			if(dao.getId() == null) {
-	            			ResultSet rs = psUser.getGeneratedKeys();
-	            			if (rs != null && rs.next()) {
-	            				int idNew = rs.getInt(1);
-	            				user.setId(idNew);
-	            			}
-	            		}
-	        		} else {
-	        			cn.rollback();
-	        			user = null;
-	        		}
-	        	} else {
-	        		cn.rollback();
-	        		user = null;
-	        	}
+        		cn.commit();
         	} else {
         		cn.rollback();
         		user = null;
@@ -214,11 +204,10 @@ public class UserDAO implements ICrud<User,Integer>{
 			if (ok) {
 				psUser.setInt(1, id);
 				ok = psUser.executeUpdate() > 0;
-				if (ok) {
-					cn.commit();
-				} else {
-					cn.rollback();
-				}
+			}
+			
+			if (ok) {
+				cn.commit();
 			} else {
 				cn.rollback();
 			}
