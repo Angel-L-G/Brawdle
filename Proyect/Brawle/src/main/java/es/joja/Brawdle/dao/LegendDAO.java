@@ -231,12 +231,104 @@ public class LegendDAO implements ICrud<Legend, Integer>{
     public boolean delete(Integer id) {
         boolean ok = true;
         
+        String legendsql = "DELETE FROM " + LegendsContract.TABLE_NAME
+        		+ " WHERE " + LegendsContract.ID + " = ?;";
+        
+        String lwsql = "DELETE FROM " + LegendsWeaponsContract.TABLE_NAME
+        		+ " WHERE " + LegendsWeaponsContract.LEGEND_ID + " = ?;";
+
+        String lrsql = "DELETE FROM " + LegendsRacesContract.TABLE_NAME
+        		+ " WHERE " + LegendsRacesContract.LEGEND_ID + " = ?;";
+        
+        try(
+        	Connection cn = jdbcTemplate.getDataSource().getConnection();
+        	PreparedStatement psLegend = cn.prepareStatement(legendsql);
+    		PreparedStatement psLW = cn.prepareStatement(lwsql);
+    		PreparedStatement psLR = cn.prepareStatement(lrsql);
+        ){
+        	cn.setAutoCommit(false);
+        	
+        	psLW.setInt(1, id);
+        	ok = psLW.executeUpdate() > 0;
+        	
+        	if (ok) {
+        		psLR.setInt(1, id);
+        		ok = psLR.executeUpdate() > 0;
+        		
+        		if (ok) {
+        			psLegend.setInt(1, id);
+        			ok = psLegend.executeUpdate() > 0;
+        		}
+        	}
+        	
+        	if (ok) {
+        		cn.commit();
+        	} else {
+        		cn.rollback();
+        	}
+        	
+        	cn.setAutoCommit(true);
+        } catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			ok = false;
+		}
+        
         return ok;
     }
 
     @Override
     public ArrayList<Legend> findAll() {
-        return null;
+    	ArrayList<Legend> legends = new ArrayList();
+        
+        String legendsql = "SELECT * FROM " + LegendsContract.TABLE_NAME + ";";
+        
+        String lwsql = "SELECT * FROM " + LegendsWeaponsContract.TABLE_NAME
+        		+ " WHERE " + LegendsWeaponsContract.LEGEND_ID + " = ?;";
+
+        String lrsql = "SELECT * FROM " + LegendsRacesContract.TABLE_NAME
+        		+ " WHERE " + LegendsRacesContract.LEGEND_ID + " = ?;";
+        
+        try(
+        	Connection cn = jdbcTemplate.getDataSource().getConnection();
+        	PreparedStatement psLegend = cn.prepareStatement(legendsql);
+    		PreparedStatement psLW = cn.prepareStatement(lwsql);
+    		PreparedStatement psLR = cn.prepareStatement(lrsql);
+        ){
+        	ResultSet rsLegend = psLegend.executeQuery();
+        	
+        	while (rsLegend.next()) {
+        		int id = rsLegend.getInt(LegendsContract.ID);
+        		String name = rsLegend.getString(LegendsContract.NAME);
+        		String gender = rsLegend.getString(LegendsContract.GENDER_NAME);
+        		int year = rsLegend.getInt(LegendsContract.YEAR_NUM);
+        		
+        		psLW.setInt(1, id);
+        		ResultSet rsLW = psLW.executeQuery();
+        		String weapons[] = new String[2];
+        		for (int i = 0; rsLW.next(); i++) {
+        			String weapon = rsLW.getString(LegendsWeaponsContract.WEAPON_NAME);
+        			weapons[i] = weapon;
+        		}
+        		
+        		psLR.setInt(1, id);
+        		ResultSet rsLR = psLR.executeQuery();
+        		ArrayList<String> races = new ArrayList();
+        		while (rsLR.next()) {
+        			String race = rsLR.getString(LegendsRacesContract.RACE_NAME);
+        			races.add(race);
+        		}
+        		
+        		Legend legend = new Legend(id, name, races, gender, year, weapons);
+        		legends.add(legend);
+        	}
+        } catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			legends = null;
+		}
+        
+        return legends;
     }
     
     public String saveWeapon(String name) {
