@@ -60,7 +60,7 @@ public class UserDAO implements ICrud<User,Integer>{
         ) {
         	
         	cn.setAutoCommit(false);
-        	String role = checkRoles(dao.getRole());
+        	String role = findRole(dao.getRole());
         	if (role == null) {//This checks if it exists
         		role = saveRole(dao.getRole());
         		if (role == null) {//This inserts it if it does not exist
@@ -327,22 +327,22 @@ public class UserDAO implements ICrud<User,Integer>{
 		return role;
 	}
 	
-	public String checkRoles(String roleToCheck) {
+	public String findRole(String roleToCheck) {
 		String role = null;
 		
-		String sql = "SELECT * FROM " + RolesContract.TABLE_NAME + ";";
+		String sql = "SELECT * FROM " + RolesContract.TABLE_NAME
+				+ " WHERE " + RolesContract.NAME + ";";
 		
 		try(
 			Connection cn = jdbcTemplate.getDataSource().getConnection();
 			PreparedStatement ps = cn.prepareStatement(sql);
 		){
+			ps.setString(1, roleToCheck);
 			ResultSet rs = ps.executeQuery();
-			while (rs.next() && !roleToCheck.equals(role)) {//This checks if the role exists
+			if (rs.next()) {
 				role = rs.getString(1);
 			}
-			if (!roleToCheck.equals(role)) {//This double checks if the role exists, because it could have exited the while but it doesnt exist
-				role = null;
-			}
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
