@@ -1,17 +1,17 @@
-package es.joja.Brawle.entity;
+package es.joja.Brawdle.entity;
 
 import java.io.Serializable;
 
 public class Game implements Serializable {
-    int id;
-    Legend legend;
+    private Integer id;
+    private Legend legend;
 
     public Game(int id, Legend legend) {
         this.id = id;
         this.legend = legend;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
