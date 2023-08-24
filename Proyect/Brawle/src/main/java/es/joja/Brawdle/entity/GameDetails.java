@@ -5,12 +5,12 @@ import java.io.Serializable;
 public class GameDetails implements Serializable {
     private Game game;
     private Integer numTries;
-    private boolean guessed;
+    private Boolean guessed;
 
     public GameDetails() {
     }
 
-    public GameDetails(Game game, int numTries, boolean guessed) {
+    public GameDetails(Game game, Integer numTries, Boolean guessed) {
         this.game = game;
         this.numTries = numTries;
         this.guessed = guessed;
@@ -32,7 +32,7 @@ public class GameDetails implements Serializable {
         this.numTries = numTries;
     }
 
-    public boolean isGuessed() {
+    public Boolean isGuessed() {
         return guessed;
     }
 

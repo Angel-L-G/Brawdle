@@ -14,7 +14,7 @@ public class Legend implements Serializable {
     public Legend() {
     }
 
-    public Legend(int id, String name, ArrayList<String> races, String gender, int year, String[] weapons) {
+    public Legend(Integer id, String name, ArrayList<String> races, String gender, int year, String[] weapons) {
         this.id = id;
         this.name = name;
         this.races = races;
