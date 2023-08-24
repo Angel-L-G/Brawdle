@@ -1,4 +1,4 @@
-package es.joja.Brawle.entity;
+package es.joja.Brawdle.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,18 +6,18 @@ import java.util.ArrayList;
 public class Legend implements Serializable {
     private Integer id;
     private String name;
-    private ArrayList<String> race;
+    private ArrayList<String> races;
     private String gender;
-    private Integer year;
+    private int year;
     private String[] weapons;
 
     public Legend() {
     }
 
-    public Legend(int id, String name, ArrayList<String> race, String gender, int year, String[] weapons) {
+    public Legend(int id, String name, ArrayList<String> races, String gender, int year, String[] weapons) {
         this.id = id;
         this.name = name;
-        this.race = race;
+        this.races = races;
         this.gender = gender;
         this.year = year;
         this.weapons = weapons;
@@ -39,12 +39,12 @@ public class Legend implements Serializable {
         this.name = name;
     }
 
-    public ArrayList<String> getRace() {
-        return race;
+    public ArrayList<String> getRaces() {
+        return races;
     }
 
-    public void setRace(ArrayList<String> race) {
-        this.race = race;
+    public void setRaces(ArrayList<String> races) {
+        this.races = races;
     }
 
     public String getGender() {
@@ -55,7 +55,7 @@ public class Legend implements Serializable {
         this.gender = gender;
     }
 
-    public Integer getYear() {
+    public int getYear() {
         return year;
     }
 

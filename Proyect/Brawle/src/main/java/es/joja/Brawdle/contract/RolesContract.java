@@ -1,4 +1,4 @@
-package es.joja.Brawle.contract;
+package es.joja.Brawdle.contract;
 
 public class RolesContract {
     private RolesContract() {}
