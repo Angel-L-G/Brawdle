@@ -6,7 +6,7 @@ public class Game implements Serializable {
     private Integer id;
     private Legend legend;
 
-    public Game(int id, Legend legend) {
+    public Game(Integer id, Legend legend) {
         this.id = id;
         this.legend = legend;
     }
