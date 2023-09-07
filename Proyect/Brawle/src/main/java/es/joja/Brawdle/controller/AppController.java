@@ -1,9 +1,7 @@
 package es.joja.Brawdle.controller;
 
-import java.util.ArrayList;
-import java.util.logging.Logger;
-
-import org.mindrot.jbcrypt.BCrypt;
+import es.joja.Brawdle.entity.Game;
+import es.joja.Brawdle.entity.Legend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +16,10 @@ import es.joja.Brawdle.entity.User;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
+import java.util.ArrayList;
+
+
 
 @Controller
 @RequestMapping("/")
@@ -112,8 +114,9 @@ public class AppController {
 		ServletContext app = request.getServletContext();
 		app.setAttribute("game", game);
 
-		game.setLegend(legendDAO.findById(1));
-		gameDAO.save(game);
 
-	}
+        game.setLegend(legendDAO.findById(1));
+        gameDAO.save(game);
+
+    }
 }
