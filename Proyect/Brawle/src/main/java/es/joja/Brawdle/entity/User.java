@@ -13,6 +13,16 @@ public class User implements Serializable {
 
     public User() {
     }
+    
+    public User(String nick, String password) {
+    	 this.nick = nick;
+         this.password = password;
+         if(role.isBlank() || role.isEmpty() || role == null) {
+         	this.setRole("User");
+         } else {
+ 			this.setRole(role);
+         }
+    }
 
     public User(Integer id, String email, String nick, String password, String role) {
         this.id = id;
