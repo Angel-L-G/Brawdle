@@ -53,35 +53,6 @@ body{
     }
 }
 
-<<<<<<< HEAD
-=======
-.card:hover{
-    background-color: whitesmoke;
-    animation: slidein;
-    animation-duration: 0.5s;
-    animation-fill-mode: forwards;    
-}
-
-.card:not(hover){
-    background-color: white;
-
-    animation: slideout 0.5s;    
-
-}
-@keyframes slidein {
-    from {
-        
-        transform: translateY(0%);
-    }
-
-    to {
-        transform: translateY(-10%);
-
-        
-    }
-}
-
->>>>>>> feat: added animations to the cards #11
 @keyframes slideout {
     from {
         
