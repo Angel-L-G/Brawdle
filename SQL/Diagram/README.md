@@ -1,3 +1,4 @@
+
 # Diagrams
 ## Entity-Relationship
 
@@ -8,5 +9,6 @@
 
 
 ## Normalization
+
 
 
