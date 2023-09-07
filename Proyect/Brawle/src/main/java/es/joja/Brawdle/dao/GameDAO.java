@@ -8,6 +8,7 @@ import java.sql.Types;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jdbc.JdbcConnectionDetails;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -35,7 +36,7 @@ public class GameDAO implements ICrud<Game ,Integer>{
     	
     	try(
     		Connection cn = jdbcTemplate.getDataSource().getConnection();
-    		PreparedStatement ps = cn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)
+    		PreparedStatement ps = cn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
     	){
     		if (dao.getId() == null) {
         		ps.setNull(1, Types.NULL);
@@ -43,6 +44,18 @@ public class GameDAO implements ICrud<Game ,Integer>{
         		ps.setInt(1, dao.getId());
         	}
     		ps.setInt(2, dao.getLegend().getId());
+    		int cantidad = ps.executeUpdate();
+    		
+    		if (cantidad > 0) {
+    			game = dao;
+	    		if(dao.getId() == null) {
+	    			ResultSet rs = ps.getGeneratedKeys();
+	    			if (rs != null && rs.next()) {
+	    				int idNew = rs.getInt(1);
+	    				game.setId(idNew);
+	    			}
+	    		}
+    		}
     	} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -143,5 +156,34 @@ public class GameDAO implements ICrud<Game ,Integer>{
 		}
         
         return games;
+    }
+    
+    public Game getLast() {
+    	Game game = null;
+    	
+    	String sql = "SELECT * FROM " + GamesContract.TABLE_NAME 
+    			+ " ORDER BY " + GamesContract.ID + " DESC LIMIT 1;";
+    	
+    	try(
+			Connection cn = jdbcTemplate.getDataSource().getConnection();
+        	PreparedStatement ps = cn.prepareStatement(sql);
+    	){
+    		ResultSet rs = ps.executeQuery();
+    		
+    		if (rs.next()) {
+    			int id = rs.getInt(GamesContract.ID);
+    			int legendId = rs.getInt(GamesContract.LEGEND_ID);
+        		Legend legend = legendDAO.findById(legendId);
+        		game = new Game(id, legend);
+    		}
+    		
+    	} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			game = null;
+		}
+    	
+    	
+    	return game;
     }
 }

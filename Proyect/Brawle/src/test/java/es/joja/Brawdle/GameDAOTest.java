@@ -1,6 +1,7 @@
 package es.joja.Brawdle;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -84,7 +85,7 @@ class GameDAOTest {
 		Game save = gameDAO.save(game);
 		
 		assertNotNull(save);
-		Game findById = gameDAO.findById(game.getId());
+		Game findById = gameDAO.findById(save.getId());
 		assertTrue(20 == findById.getId());
 		assertTrue(legend.getId() == findById.getLegend().getId());
 		
@@ -96,5 +97,37 @@ class GameDAOTest {
 		findById = gameDAO.findById(save.getId());
 		assertNotNull(findById);
 		assertTrue(save.getLegend().getId() == findById.getLegend().getId());
+	}
+	
+	@Test
+	@Order(4)
+	void testUpdate() {
+		Legend legendUp = new Legend(2, "Cassidy", null, "Female", 2014, null);
+		Game game = new Game(1, legendUp);
+		
+		boolean ok = gameDAO.update(game);
+		assertTrue(ok);
+		
+		Game findById = gameDAO.findById(1);
+		
+		assertTrue(findById.getLegend().getId() == legendUp.getId());
+	}
+	
+	@Test
+	@Order(5)
+	void testDelete() {
+		boolean ok = gameDAO.delete(2);
+		assertTrue(ok);
+		Game findById = gameDAO.findById(2);
+		assertNull(findById);
+	}
+	
+	@Test
+	@Order(6)
+	void testGetLast() {
+		
+		Game getLast = gameDAO.getLast();
+		
+		assertNotNull(getLast);
 	}
 }
