@@ -54,7 +54,7 @@ class GameDAOTest {
 	
 	@Test
 	@Order(1)
-	void testfindAll() {
+	void testFindAll() {
 		ArrayList<Game> findAll = gameDAO.findAll();
 		assertNotNull(findAll);
 		assertTrue(findAll.size() == listGamesTest.length);
