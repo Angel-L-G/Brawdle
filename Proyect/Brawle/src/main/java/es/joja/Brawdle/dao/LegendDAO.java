@@ -168,6 +168,60 @@ public class LegendDAO implements ICrud<Legend, Integer>{
         
         return legend;
     }
+    
+    public Legend findByName(String name) {
+        Legend legend = null;
+        
+        String legendsql = "SELECT * FROM " + LegendsContract.TABLE_NAME
+        		+ " WHERE " + LegendsContract.NAME + " = ?;";
+        
+        String lwsql = "SELECT * FROM " + LegendsWeaponsContract.TABLE_NAME
+        		+ " WHERE " + LegendsWeaponsContract.LEGEND_ID + " = ?;";
+
+        String lrsql = "SELECT * FROM " + LegendsRacesContract.TABLE_NAME
+        		+ " WHERE " + LegendsRacesContract.LEGEND_ID + " = ?;";
+        
+        try(
+        	Connection cn = jdbcTemplate.getDataSource().getConnection();
+        	PreparedStatement psLegend = cn.prepareStatement(legendsql);
+    		PreparedStatement psLW = cn.prepareStatement(lwsql);
+    		PreparedStatement psLR = cn.prepareStatement(lrsql);
+        ){
+        	
+        	psLegend.setString(1, name);
+        	ResultSet rsLegend = psLegend.executeQuery();
+        	
+        	if (rsLegend.next()) {
+        		int id = rsLegend.getInt(LegendsContract.ID);
+        		String gender = rsLegend.getString(LegendsContract.GENDER_NAME);
+        		int year = rsLegend.getInt(LegendsContract.YEAR_NUM);
+        		
+        		psLW.setInt(1, id);
+        		ResultSet rsLW = psLW.executeQuery();
+        		String weapons[] = new String[2];
+        		for (int i = 0; rsLW.next(); i++) {
+        			String weapon = rsLW.getString(LegendsWeaponsContract.WEAPON_NAME);
+        			weapons[i] = weapon;
+        		}
+        		
+        		psLR.setInt(1, id);
+        		ResultSet rsLR = psLR.executeQuery();
+        		ArrayList<String> races = new ArrayList();
+        		while (rsLR.next()) {
+        			String race = rsLR.getString(LegendsRacesContract.RACE_NAME);
+        			races.add(race);
+        		}
+        		
+        		legend = new Legend(id, name, races, gender, year, weapons);
+        	}
+        } catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			legend = null;
+		}
+        
+        return legend;
+    }
 
     @Override
     public boolean update(Legend dao) {
