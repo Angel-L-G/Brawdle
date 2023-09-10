@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import es.joja.Brawdle.contract.GamesContract;
 import es.joja.Brawdle.contract.GendersContract;
 import es.joja.Brawdle.contract.LegendsContract;
 import es.joja.Brawdle.contract.LegendsRacesContract;
@@ -249,11 +250,15 @@ public class LegendDAO implements ICrud<Legend, Integer>{
         String lrsql = "DELETE FROM " + LegendsRacesContract.TABLE_NAME
         		+ " WHERE " + LegendsRacesContract.LEGEND_ID + " = ?;";
         
+        String gamesql = "DELETE FROM " + GamesContract.TABLE_NAME
+        		+ " WHERE " + GamesContract.LEGEND_ID + " = ?;";
+        
         try(
         	Connection cn = jdbcTemplate.getDataSource().getConnection();
         	PreparedStatement psLegend = cn.prepareStatement(legendsql);
     		PreparedStatement psLW = cn.prepareStatement(lwsql);
     		PreparedStatement psLR = cn.prepareStatement(lrsql);
+        	PreparedStatement psGame = cn.prepareStatement(gamesql);
         ){
         	cn.setAutoCommit(false);
         	
@@ -265,8 +270,11 @@ public class LegendDAO implements ICrud<Legend, Integer>{
         		ok = psLR.executeUpdate() > 0;
         		
         		if (ok) {
-        			psLegend.setInt(1, id);
-        			ok = psLegend.executeUpdate() > 0;
+        			psGame.setInt(1, id);
+        			psGame.executeUpdate();
+        			
+    				psLegend.setInt(1, id);
+    				ok = psLegend.executeUpdate() > 0;
         		}
         	}
         	
@@ -391,12 +399,29 @@ public class LegendDAO implements ICrud<Legend, Integer>{
 		return weapon;
 	}
     
-    public boolean updateWeapon(String name) {
-    	boolean ok = false;
+    public boolean updateWeapon(String newName, String oldName) {
+    	boolean ok = true;
     	
-    	if(deleteWeapon(name)) {
-    		if(saveWeapon(name) != null) {
-    			ok = true;
+    	if (saveWeapon(newName) != null) {
+    		
+    		String sql = "UPDATE " + LegendsWeaponsContract.TABLE_NAME + " SET " + LegendsWeaponsContract.WEAPON_NAME
+    				+ " = ? WHERE " + LegendsWeaponsContract.WEAPON_NAME + " = ?;";
+    		
+    		try(
+				Connection cn = jdbcTemplate.getDataSource().getConnection();
+				PreparedStatement ps = cn.prepareStatement(sql);
+    		){
+    			ps.setString(1, newName);
+    			ps.setString(2, oldName);
+    			ok = ps.executeUpdate() > 0;
+    			
+    		} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    		
+    		if (ok) {
+    			deleteWeapon(oldName);
     		}
     	}
     	
@@ -406,15 +431,31 @@ public class LegendDAO implements ICrud<Legend, Integer>{
     public boolean deleteWeapon(String name) {
     	boolean ok = true;
     	
-    	String sql = "DELETE FROM " + WeaponsContract.TABLE_NAME
+    	String wsql = "DELETE FROM " + WeaponsContract.TABLE_NAME
     			+ " WHERE " + WeaponsContract.NAME + " = ?;";
+    	
+    	String lwsql = "DELETE FROM " + LegendsWeaponsContract.TABLE_NAME
+    			+ " WHERE " + LegendsWeaponsContract.WEAPON_NAME + " = ?;";
     	
     	try(
 			Connection cn = jdbcTemplate.getDataSource().getConnection();
-			PreparedStatement ps = cn.prepareStatement(sql);
+			PreparedStatement psW = cn.prepareStatement(wsql);
+    		PreparedStatement psLW = cn.prepareStatement(lwsql);
     	){
-    		ps.setString(1, name);
-    		ok = ps.executeUpdate() > 0;
+    		cn.setAutoCommit(false);
+    		if (findWeapon(name) != null) {
+    			psLW.setString(1, name);
+        		ok = psLW.executeUpdate() > 0;
+    		}
+			psW.setString(1, name);
+    		ok = psW.executeUpdate() > 0;
+    		
+    		if (ok) {
+    			cn.commit();
+    		} else {
+    			cn.rollback();
+    		}
+    		cn.setAutoCommit(true);
     	} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -428,7 +469,7 @@ public class LegendDAO implements ICrud<Legend, Integer>{
 		String race = null;
 		
 		String sql = "SELECT * FROM " + RacesContract.TABLE_NAME 
-				+ "WHERE " + RacesContract.NAME + " = ?;";
+				+ " WHERE " + RacesContract.NAME + " = ?;";
 		
 		try(
 			Connection cn = jdbcTemplate.getDataSource().getConnection();
@@ -436,7 +477,7 @@ public class LegendDAO implements ICrud<Legend, Integer>{
 		){
 			ps.setString(1, raceToCheck);
 			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
+			if (rs.next()) {
 				race = rs.getString(RacesContract.NAME);
 			}
 		} catch (SQLException e) {

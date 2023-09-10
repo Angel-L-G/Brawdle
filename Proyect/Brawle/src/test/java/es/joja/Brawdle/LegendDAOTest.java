@@ -34,8 +34,8 @@ class LegendDAOTest {
 	private static ArrayList<String> races1(){
 		ArrayList<String> races1 = new ArrayList();
 		
-		races1.add("Humanoid");
 		races1.add("Animaloid");
+		races1.add("Humanoid");
 		
 		return races1;
 	}
@@ -212,7 +212,7 @@ class LegendDAOTest {
 	void testSave() {
 		ArrayList<String> races = new ArrayList();
 		races.add("Humanoid");
-		String[] weapons = {"Sword", "Blasters"};
+		String[] weapons = {"Blasters", "Sword"};
 		Legend legend = new Legend(20, "Test1", races, "Unknown", 2015, weapons);
 		
 		Legend save = legendDAO.save(legend);
@@ -253,36 +253,83 @@ class LegendDAOTest {
 	@Test
 	@Order(5)
 	void testSaveWeapon() {
+		String weapon = "Axe";
 		
+		String save = legendDAO.saveWeapon(weapon);
+		assertNotNull(save);
+		
+		String findWeapon = legendDAO.findWeapon(save);
+		assertTrue(save.equals(findWeapon));
 	}
 	
 	@Test
 	@Order(6)
 	void testSaveYear() {
+		int year = 2016;
 		
+		int save = legendDAO.saveYear(year);
+		assertNotNull(save);
+		
+		int findYear = legendDAO.findYear(save);
+		assertTrue(save == findYear);
 	}
 	
 	@Test
 	@Order(7)
 	void testDelete() {
-		
+		boolean ok = legendDAO.delete(2);
+		assertTrue(ok);
+		Legend findById = legendDAO.findById(2);
+		assertNull(findById);
 	}
 	
 	@Test
 	@Order(8)
 	void testDeleteWeapon() {
-		
+		boolean ok = legendDAO.deleteWeapon("Blasters");
+		assertTrue(ok);
+		String weapon = legendDAO.findWeapon("Blasters");
+		assertNull(weapon);
 	}
 	
 	@Test
 	@Order(9)
 	void testUpdate() {
+		ArrayList<String> races = new ArrayList();
+		races.add("Humanoid");
+		String[] weapons = {"Grapple Hammer", "Sword"};
 		
+		Legend legend = new Legend(1, "Bödvar", races, "Female", 2015, weapons);
+		boolean update = legendDAO.update(legend);
+		assertTrue(update);
+		
+		Legend findById = legendDAO.findById(legend.getId());
+		assertTrue(legend.getId() == findById.getId());
+		assertTrue(findById.getName().equals(legend.getName()));
+		assertTrue(findById.getGender().equals(legend.getGender()));
+		assertTrue(findById.getYear() == legend.getYear());
+		for (int i = 0; i < findById.getWeapons().length; i++) {
+			assertTrue(findById.getWeapons()[i].equals(weapons[i]));
+		}
+		
+		for (int i = 0; i < findById.getRaces().size(); i++) {
+			assertTrue(findById.getRaces().get(i).equals(races.get(i)));
+		}
 	}
 	
 	@Test
 	@Order(10)
 	void testUpdateWeapon() {
+		String newWeapon = "Sord";
+		String oldWeapon = "Sword";
 		
+		boolean ok = legendDAO.updateWeapon(newWeapon, oldWeapon);
+		assertTrue(ok);
+		
+		String findNew = legendDAO.findWeapon(newWeapon);
+		assertNotNull(findNew);
+		
+		String findOld = legendDAO.findWeapon(oldWeapon);
+		assertNull(findOld);
 	}
 }
