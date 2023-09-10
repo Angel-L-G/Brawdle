@@ -101,6 +101,15 @@ class GameDAOTest {
 	
 	@Test
 	@Order(4)
+	void testDelete() {
+		boolean ok = gameDAO.delete(2);
+		assertTrue(ok);
+		Game findById = gameDAO.findById(2);
+		assertNull(findById);
+	}
+	
+	@Test
+	@Order(5)
 	void testUpdate() {
 		Legend legendUp = new Legend(2, "Cassidy", null, "Female", 2014, null);
 		Game game = new Game(1, legendUp);
@@ -111,15 +120,6 @@ class GameDAOTest {
 		Game findById = gameDAO.findById(1);
 		
 		assertTrue(findById.getLegend().getId() == legendUp.getId());
-	}
-	
-	@Test
-	@Order(5)
-	void testDelete() {
-		boolean ok = gameDAO.delete(2);
-		assertTrue(ok);
-		Game findById = gameDAO.findById(2);
-		assertNull(findById);
 	}
 	
 	@Test

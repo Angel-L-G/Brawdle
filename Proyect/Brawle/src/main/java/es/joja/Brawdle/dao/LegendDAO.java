@@ -391,31 +391,37 @@ public class LegendDAO implements ICrud<Legend, Integer>{
 		return weapon;
 	}
     
-    public String saveRace(String name) {
-    	String race = null;
+    public boolean updateWeapon(String name) {
+    	boolean ok = false;
     	
-    	String sql = "INSERT INTO " + RacesContract.TABLE_NAME + "("
-    			+ RacesContract.NAME + ")"
-    			+ " VALUES(?);";
+    	if(deleteWeapon(name)) {
+    		if(saveWeapon(name) != null) {
+    			ok = true;
+    		}
+    	}
+    	
+    	return ok;
+    }
+    
+    public boolean deleteWeapon(String name) {
+    	boolean ok = true;
+    	
+    	String sql = "DELETE FROM " + WeaponsContract.TABLE_NAME
+    			+ " WHERE " + WeaponsContract.NAME + " = ?;";
     	
     	try(
 			Connection cn = jdbcTemplate.getDataSource().getConnection();
 			PreparedStatement ps = cn.prepareStatement(sql);
     	){
-    		
     		ps.setString(1, name);
-    		int cantidad = ps.executeUpdate();
-    		if (cantidad > 0) {
-    			race = name;
-    		}
-    		
+    		ok = ps.executeUpdate() > 0;
     	} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			race = null;
+			ok = false;
 		}
     	
-    	return race;
+    	return ok;
     }
     
     public String findRace(String raceToCheck) {
@@ -492,33 +498,6 @@ public class LegendDAO implements ICrud<Legend, Integer>{
 		
 		return year;
 	}
-    
-    public String saveGender(String name) {
-    	String gender = null;
-    	
-    	String sql = "INSERT INTO " + GendersContract.TABLE_NAME + "("
-    			+ GendersContract.NAME + ")"
-    			+ " VALUES(?);";
-    	
-    	try(
-			Connection cn = jdbcTemplate.getDataSource().getConnection();
-			PreparedStatement ps = cn.prepareStatement(sql);
-    	){
-    		
-    		ps.setString(1, name);
-    		int cantidad = ps.executeUpdate();
-    		if (cantidad > 0) {
-    			gender = name;
-    		}
-    		
-    	} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			gender = null;
-		}
-    	
-    	return gender;
-    }
     
     public String findGender(String genderToCheck) {
 		String gender = null;
