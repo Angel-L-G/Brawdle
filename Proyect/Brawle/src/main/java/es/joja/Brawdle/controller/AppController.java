@@ -39,8 +39,6 @@ public class AppController {
 		ModelAndView modelAndView = new ModelAndView();
 		Logger debug = Logger.getLogger("debug");
 		
-		debug.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-		
 		ServletContext app = request.getServletContext();
 		Game game =(Game) app.getAttribute("game");
 		
@@ -49,7 +47,6 @@ public class AppController {
 		}
 		
 		modelAndView.setViewName("html/index.html");
-		debug.info("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
 		return modelAndView;
 	}
 
@@ -66,7 +63,8 @@ public class AppController {
 		String plainPassword = request.getParameter("password");
 		
 		HttpSession session = request.getSession();
-		User user = userDAO.findByNick(nick);
+		User user = new User("Angel","abc");
+		//User user = userDAO.findByNick(nick);
 		
 		ModelAndView modelAndView = new ModelAndView();
 		
