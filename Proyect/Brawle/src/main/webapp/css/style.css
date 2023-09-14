@@ -75,6 +75,7 @@ body{
     margin-top: 5%;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     height: 20rem;
 =======
     height: 35rem;
@@ -82,6 +83,9 @@ body{
 =======
     height: 20rem;
 >>>>>>> feat: finished page of login and register #11
+=======
+    height: 20rem;
+>>>>>>> bafbe0b5e769546919ac303719857f9d0d77f48e
     width: 35rem;
     background-color: white;
     border-radius: 23px;
@@ -92,6 +96,9 @@ body{
     height: 100%;
     border-radius: 23px;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> bafbe0b5e769546919ac303719857f9d0d77f48e
 
 }
 .right{
@@ -101,6 +108,7 @@ body{
 
     border-radius: 23px;
 
+<<<<<<< HEAD
 =======
 >>>>>>> feat:Made changes in the form cards to look better. #11
 
@@ -114,6 +122,11 @@ body{
 
 
 <<<<<<< HEAD
+=======
+
+}
+
+>>>>>>> bafbe0b5e769546919ac303719857f9d0d77f48e
 .right-form{
     height: 80%;
     margin-top: 10%;
@@ -136,6 +149,7 @@ to{
     opacity: 1;
 }
     
+<<<<<<< HEAD
 =======
 >>>>>>> feat:Made changes in the form cards to look better. #11
 }
@@ -164,3 +178,6 @@ to{
     
 }
 
+=======
+}
+>>>>>>> bafbe0b5e769546919ac303719857f9d0d77f48e

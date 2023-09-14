@@ -12,13 +12,17 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> feat: added animations to the cards #11
+=======
+>>>>>>> bafbe0b5e769546919ac303719857f9d0d77f48e
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <!--Own Styles-->
     <link rel="stylesheet" href="../css/style.css">
     <title>Brawdle</title>
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
     <!--Own Styles-->
@@ -26,6 +30,8 @@
     <title>Brawdle</title>
 
 >>>>>>> feat: Created cards for login and register. Im ccurrently working on pop ups to show log in an register forms #11
+=======
+>>>>>>> bafbe0b5e769546919ac303719857f9d0d77f48e
     <!--Javascript-->
     <script src="../js/script.js"></script>
 </head>
@@ -34,10 +40,14 @@
     <header><div><img src="../img/logo.png" alt="logo provisional" class="logo"></div></header>
     
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> bafbe0b5e769546919ac303719857f9d0d77f48e
     <div class="cards fade-in" id="cards">
     <div class="row row-cols-1 row-cols-md-2 g-4">
         <div class="col">
             <div class="card animate__animated animate__jackInTheBox">
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
     <div class="cards" id="cards">
@@ -47,6 +57,8 @@
 >>>>>>> feat: Created cards for login and register. Im ccurrently working on pop ups to show log in an register forms #11
 =======
 >>>>>>> feat: added animations to the cards #11
+=======
+>>>>>>> bafbe0b5e769546919ac303719857f9d0d77f48e
             <div class="card-body">
                 <h5 class="card-title">Iniciar sesión</h5>
                 <p class="card-text">Inicia sesión para continuar jugando</p>
@@ -65,6 +77,7 @@
         </div>
         </div>
     </div>
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 <<<<<<< HEAD
@@ -90,6 +103,8 @@
 =======
 =======
 >>>>>>> feat: finished page of login and register #11
+=======
+>>>>>>> bafbe0b5e769546919ac303719857f9d0d77f48e
     <div class="form-div fade-in" style="display: none" id="loginForm">
         <div class="left"><div class="image"><img src="../img/Koji.png" width="250px" style="margin-left: 10%;"></div></div>
         <div class="right">
@@ -126,6 +141,7 @@
     </div>
 </body>
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> feat:Made changes in the form cards to look better. #11
 
         }
@@ -155,4 +171,6 @@
 </body>
 =======
 >>>>>>> feat: finished page of login and register #11
+=======
+>>>>>>> bafbe0b5e769546919ac303719857f9d0d77f48e
 </html>
