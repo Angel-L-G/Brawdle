@@ -43,7 +43,7 @@ public class AppController {
 			// game = gameDAO.getLast();
 		}
 
-		modelAndView.setViewName("loginRegister.jsp");
+		modelAndView.setViewName("html/loginRegister.jsp");
 		return modelAndView;
 	}
 
