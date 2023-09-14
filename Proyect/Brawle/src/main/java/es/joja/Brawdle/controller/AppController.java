@@ -71,12 +71,12 @@ public class AppController {
 			} else {
 
 				modelAndView.addObject("mensaje", "pass de " + nick + " mal");
-				modelAndView.setViewName("login.jsp");
+				modelAndView.setViewName("html/loginRegister.jsp");
 			}
 		} else {
 
 			modelAndView.addObject("mensaje", "usuario " + nick + " no existe");
-			modelAndView.setViewName("login.jsp");
+			modelAndView.setViewName("html/loginRegister.jsp");
 		}
 		return modelAndView;
 	}
