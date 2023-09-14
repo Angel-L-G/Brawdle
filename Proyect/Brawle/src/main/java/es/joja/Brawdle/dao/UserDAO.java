@@ -171,6 +171,57 @@ public class UserDAO implements ICrud<User,Integer>{
 		return user;
 	}
 
+	public User findByNick(String nick) {
+		User user = null;
+		
+		String usersql = "SELECT * FROM " + UsersContract.TABLE_NAME
+				+ " WHERE " + UsersContract.NICK + " = ?;";
+		
+		String detailsql = "SELECT * FROM " + GamesUsersContract.TABLE_NAME
+				+ " WHERE " + GamesUsersContract.USER_ID + " = ?;";
+		
+		
+		try(
+				Connection cn = jdbcTemplate.getDataSource().getConnection(); 
+				PreparedStatement psUser = cn.prepareStatement(usersql);
+				PreparedStatement psDetail = cn.prepareStatement(detailsql);
+		){
+			psUser.setString(1, nick);
+			ResultSet rsUser = psUser.executeQuery();
+			
+			if(rsUser.next()) {
+				int id = rsUser.getInt(UsersContract.ID);
+				String email = rsUser.getString(UsersContract.EMAIL);
+				String hashpw = rsUser.getString(UsersContract.PASSWORD);
+				String role = rsUser.getString(UsersContract.ROLE);
+				
+				user = new User(id,nick,email,hashpw,role);
+				
+				psDetail.setInt(1, id);
+				ResultSet rsDetail = psDetail.executeQuery();
+        		ArrayList<GameDetails> details = new ArrayList();
+				while (rsDetail.next()) {
+					int gameId = rsDetail.getInt(GamesUsersContract.GAME_ID);
+					Game game = gameDAO.findById(gameId);
+					int numTries = rsDetail.getInt(GamesUsersContract.NUM_TRIES);
+					boolean guessed = false;
+					if (rsDetail.getInt(GamesUsersContract.GUESSED) != 0) {
+						guessed = true;
+					}
+					GameDetails detail = new GameDetails(game, numTries, guessed);
+					details.add(detail);
+				}
+				user.setDetails(details);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return user;
+	}
+	
 	@Override
 	public boolean update(User dao) {
 		boolean ok = false;

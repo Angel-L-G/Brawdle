@@ -5,8 +5,8 @@ import java.util.ArrayList;
 
 public class User implements Serializable {
 	private Integer id;
-	private String nick;
 	private String email;
+	private String nick;
 	private String password;
 	private String role;
 	private ArrayList<GameDetails> gameDetails;
@@ -14,10 +14,10 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(Integer id, String nick, String email, String password, String role) {
+    public User(Integer id, String email, String nick, String password, String role) {
         this.id = id;
-        this.nick = nick;
         this.email = email;
+        this.nick = nick;
         this.password = password;
         this.gameDetails = new ArrayList<>();
         if(role.isBlank() || role.isEmpty() || role == null) {
