@@ -14,8 +14,9 @@ public class User implements Serializable {
     public User() {
     }
     
-    public User(String nick, String password) {
+    public User(String nick,String email, String password) {
     	 this.nick = nick;
+    	 this.email = email;
          this.password = password;
          this.setRole("User");
     }
@@ -26,7 +27,7 @@ public class User implements Serializable {
         this.nick = nick;
         this.password = password;
         this.gameDetails = new ArrayList<>();
-        if(role.isBlank() || role.isEmpty() || role == null) {
+        if(this.role.isBlank() || this.role.isEmpty() || this.role == null) {
         	this.setRole("User");
         } else {
 			this.setRole(role);

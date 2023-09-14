@@ -16,7 +16,7 @@ public class DatabaseConfig {
 	@Profile("!test")
 	public DataSource dataSource() {
 		HikariConfig config = new HikariConfig();
-		config.setJdbcUrl("jdbc:mysql://localhost:3306/brawdle");
+		config.setJdbcUrl("jdbc:mysql://localhost:3306/BRAWDLE");
 		config.setUsername("root");
 		config.setPassword("1q2w3e4r");
 		config.addDataSourceProperty("cachePrepStmts", "true");
