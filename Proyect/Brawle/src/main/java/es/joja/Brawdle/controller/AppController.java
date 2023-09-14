@@ -58,7 +58,7 @@ public class AppController {
 		String plainPassword = request.getParameter("password");
 
 		HttpSession session = request.getSession();
-		User user = new User("Angel", "abc");
+		User user = new User("Angel","a" ,"abc");
 		// User user = userDAO.findByNick(nick);
 
 		ModelAndView modelAndView = new ModelAndView();
@@ -67,7 +67,7 @@ public class AppController {
 			if (BCrypt.checkpw(plainPassword, user.getPassword())) {
 
 				session.setAttribute("user", user);
-				modelAndView.setViewName("index.jsp");
+				modelAndView.setViewName("html/index.jsp");
 			} else {
 
 				modelAndView.addObject("mensaje", "pass de " + nick + " mal");
@@ -88,9 +88,10 @@ public class AppController {
 
 		String nick = request.getParameter("nick");
 		String password = request.getParameter("password");
+		String email = request.getParameter("email");
 		String gensalt = BCrypt.gensalt();
 		String hashpw = BCrypt.hashpw(password, gensalt);
-		User user = new User(nick, hashpw);
+		User user = new User(nick,email,hashpw);
 		user.setNick(nick);
 		user.setPassword(hashpw);
 		userDAO.save(user);

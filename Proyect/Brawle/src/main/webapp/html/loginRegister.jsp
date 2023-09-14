@@ -27,8 +27,8 @@
         <div class="col">
             <div class="card animate__animated animate__jackInTheBox">
             <div class="card-body">
-                <h5 class="card-title">Iniciar sesion</h5>
-                <p class="card-text">Inicia sesi�n para continuar jugando</p>
+                <h5 class="card-title">Iniciar sesión</h5>
+                <p class="card-text">Inicia sesión para continuar jugando</p>
                 <a href="#" class="btn btn-primary" onclick="openLogin()">log in</a>
             </div>
             </div>
@@ -37,7 +37,7 @@
             <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Registrarse</h5>
-                <p class="card-text">Reg�strate para poder empezar a jugar</p>
+                <p class="card-text">Regístrate para poder empezar a jugar</p>
                 <a href="#" class="btn btn-primary" onclick="openRegister()">register</a>
             </div>
             </div>
@@ -66,9 +66,11 @@
             <div class="right-form">
                 <p><strong>Registrarse</strong></p>
                 <form id="register" name="register" method="post" action="register">
-                    <input type="text" id="name" class="form-control" style="width: 200px; margin-left: 20%;" placeholder="Name">
+                    <input type="text" id="nick" name="nick" class="form-control" style="width: 200px; margin-left: 20%;" placeholder="Name">
                     <br>
-                    <input type="password" id="password" class="form-control" style="width: 200px; margin-left: 20%;"  placeholder="Password">
+                    <input type="password" id="password" name="nick" class="form-control" style="width: 200px; margin-left: 20%;"  placeholder="Password">
+                    <br>
+                    <input type="text" id="email" name="email" class="form-control" style="width: 200px; margin-left: 20%;"  placeholder="email">
                     <br>
                     <button type="button" class="btn btn-primary" onclick="closeRegister()">Cancel</button>
                     <button type="submit" class="btn btn-primary">Submit</button>
